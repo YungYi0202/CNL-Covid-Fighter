@@ -1,5 +1,7 @@
 // import fs from "fs";
+//import * as fs from 'fs'
 // const fs = require('fs');
+
 const readData = async (filename) => {
   // let data = await fs.readFileSync(__dirname + "/data/" + filename, "utf-8");
   // data = JSON.parse(data.toString());
@@ -91,13 +93,22 @@ const addConfirmedRooms = async (addData) =>
   await addInElement("confirmedRooms.json", addData, "rooms");
 const addFootprint = async (addData) => {
   console.log(addData);
+  const data = await getFootprint();
+  data.push(addData);
+  try {
+    // await fs.writeFileSync(__dirname + "/data/footprint.json" , data);
+    await fs.writeFile(__dirname + "/data/footprint.json" , data);
+  } catch (err) {
+    throw err;
+  }
+  
 };
 const addCSIEFootprint = async (addData) =>
   await addInElement("csiefootprint.json", addData, "places");
 
 const getConfirmedUserKeys = async () => {
   let users = await getUsers();
-  return users.filter(user => user.status == "confirmed").map(user => user.key);
+  return users.filter(user => user.status === "confirmed").map(user => user.key);
 };
 
 export {

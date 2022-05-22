@@ -23,7 +23,7 @@ const Footprint = () => {
     /* Show the recent data first.*/
     for (let i = filteredData.length - 1; i >= 0; i--) {
       const data = filteredData[i];
-      if (dict[data.date] == undefined) {
+      if (dict[data.date] === undefined) {
         dict[data.date] = [];
       }
       dict[data.date].push({
@@ -36,9 +36,7 @@ const Footprint = () => {
   }, [rawData, dayInterval]);
 
   function isWithinInterval(fp) {
-    let date = new Date(fp.date);
-    let userKey = fp.userKey;
-    
+    let date = new Date(fp.date);  
     return date > (today - dayInterval * 86400000);
   }
 
