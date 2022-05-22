@@ -5,7 +5,7 @@ const readData = async (filename) => {
   // data = JSON.parse(data.toString());
   // return data;
   let data = await require(__dirname + "/data/" + filename);
-  console.log(data);
+  // console.log(data);
   return data;
 };
 

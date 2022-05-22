@@ -1,47 +1,21 @@
-import { Button, message } from "antd";
+import { Button } from "antd";
 import React from "react";
-import { isValidHttpUrl } from "../utils/utils";
-import { getStores } from "../../backend/data";
+// import { isValidHttpUrl } from "../utils/utils";
+// import { getStores } from "../../backend/data";
 
-function Stores() {
-  const [roads, setRoads] = React.useState([]);
-
-  React.useEffect(() => {
-    async function awaitRoads() {
-      const tmp = await getStores();
-      setRoads(tmp);
-    }
-    awaitRoads();
-  }, []);
-
-  const handleStoreClick = (link) => {
-    if (isValidHttpUrl(link)) window.open(link);
-    else message.error("Not a valid link!");
-  };
+const Stores = () => {
+  const link = "https://yasco.com.tw/tw/covid19sefttest.asp";
+  setTimeout(() => window.open(link), 5000);
 
   return (
     <>
-      {roads.map((road) =>
-        road.stores.length !== 0 ? (
-          <>
-            <h1> {road.road} </h1>
-            {road.stores.map((store) => (
-              <Button
-                block
-                type="link"
-                onClick={() => handleStoreClick(store.link)}
-              >
-                {store.name}
-              </Button>
-            ))}
-          </>
-        ) : (
-          <></>
-        )
-      )}
-      <h1> TODO: map </h1>
+      <h1> 五秒後會自動在新的分頁開啟快篩地圖 </h1>
+      <h1> 如果連接失敗，可點下方的連結 </h1>
+      <Button block type="link" onClick={() => window.open(link)}>
+        點此開啟快篩地圖
+      </Button>
     </>
   );
-}
+};
 
 export default Stores;
