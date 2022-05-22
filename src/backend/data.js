@@ -83,15 +83,22 @@ const getHotels = async () => await readData("hotels.json");
 const getFootprint = async () => await readData("footprint.json");
 const getCSIEFootprint = async () => await readData("csiefootprint.json");
 const getTelephones = async () => await readData("telephones.json");
+const getLocationOptions = async () => await readData("locationOptions.json");
 
 const updateUser = async (data) => await updateData("users.json", data);
 
 const addConfirmedRooms = async (addData) =>
   await addInElement("confirmedRooms.json", addData, "rooms");
-const addFootprint = async (addData) =>
-  await addInElement("footprint.json", addData, "places");
+const addFootprint = async (addData) => {
+  console.log(addData);
+};
 const addCSIEFootprint = async (addData) =>
   await addInElement("csiefootprint.json", addData, "places");
+
+const getConfirmedUserKeys = async () => {
+  let users = await getUsers();
+  return users.filter(user => user.status == "confirmed").map(user => user.key);
+};
 
 export {
   getUsers,
@@ -105,5 +112,7 @@ export {
   updateUser,
   addConfirmedRooms,
   addFootprint,
-  addCSIEFootprint
+  addCSIEFootprint,
+  getConfirmedUserKeys,
+  getLocationOptions
 };

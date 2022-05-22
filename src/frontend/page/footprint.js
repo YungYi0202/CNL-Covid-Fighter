@@ -1,27 +1,44 @@
 import React from "react";
 import { InputNumber, Table } from 'antd';
-import { getFootprint } from "../../backend/data";
+import { getFootprint, getConfirmedUserKeys } from "../../backend/data";
 
 const Footprint = () => {
   const [today, setToday] = React.useState(new Date());
   const [dayInterval, setDayInterval] = React.useState(7);
-  const [allFootprints, setAllFootprints] = React.useState([]);
-  const [footprints, setFootprints] = React.useState([]);
+  const [rawData, setRawData] = React.useState([]);
+  const [dateFootprints, setDateFootprints] = React.useState({});
 
   React.useEffect(() => {
     async function awaitFootprint() {
       const response = await getFootprint();
-      setAllFootprints(response);
+      const confirmedUserKeys = await getConfirmedUserKeys();
+      setRawData(response.filter(res => confirmedUserKeys.includes(res.userKey) ));
     }
     awaitFootprint();
   }, []);
 
   React.useEffect(() => {
-    setFootprints(allFootprints.filter(fp => showFootPrint(fp)));
-  }, [allFootprints, dayInterval]);
+    let filteredData = rawData.filter(data => isWithinInterval(data));
+    let dict = {};
+    /* Show the recent data first.*/
+    for (let i = filteredData.length - 1; i >= 0; i--) {
+      const data = filteredData[i];
+      if (dict[data.date] == undefined) {
+        dict[data.date] = [];
+      }
+      dict[data.date].push({
+        "time": data.time,
+        "location": data.location,
+        "note": data.note
+      });
+    }
+    setDateFootprints(dict);
+  }, [rawData, dayInterval]);
 
-  function showFootPrint(fp) {
+  function isWithinInterval(fp) {
     let date = new Date(fp.date);
+    let userKey = fp.userKey;
+    
     return date > (today - dayInterval * 86400000);
   }
 
@@ -43,11 +60,6 @@ const Footprint = () => {
     }
   ];
 
-  function mapFootprintsTableData(fp, index) {
-    fp["key"] = index + 1;
-    return fp;
-  }
-
   return (
     <>
       <InputNumber 
@@ -57,16 +69,13 @@ const Footprint = () => {
       defaultValue={dayInterval} 
       onChange={(val) => {setDayInterval(val);}} />
       
-      {footprints.map((fp, i) =>
-        fp.footprints.length !== 0 ? (
+      {Object.keys(dateFootprints).map((date, i) =>
+        dateFootprints[date].length !== 0 ? (
           <>
-            <h1> {fp.date} </h1>
+            <h1> {date} </h1>
             <Table 
             columns={tableColumns} 
-            dataSource={fp.footprints.map((data, i) => {
-              data["key"] = i + 1;
-              return data;
-            })}
+            dataSource={dateFootprints[date]}
             pagination={{ pageSize: 50 }} scroll={{ y: 240 }}
             />
           </>

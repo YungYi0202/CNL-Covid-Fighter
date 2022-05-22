@@ -40,7 +40,7 @@ const items = [
     disabled: true
   },
   {
-    label: "確診足跡通報",
+    label: "我的足跡通報",
     key: "footprintInform",
     disabled: true
   },
@@ -109,7 +109,7 @@ const App = () => {
       ) : current === "roomInform" ? (
         <RoomInform />
       ) : current === "footprintInform" ? (
-        <FootprintInform />
+        <FootprintInform user={user} setUser={setUser}/>
       ) : current === "people" ? (
         <People />
       ) : current === "room" ? (
