@@ -1,6 +1,6 @@
 import React from "react";
 import { TimePicker, DatePicker, Input, message, Button, Mentions } from "antd";
-import { addFootprint, getLocationOptions } from "../../backend/data";
+import { addFootprint, getLocationOptions } from "../../server/api";
 import { isEmpty } from "../utils/utils";
 
 const { Option } = Mentions;
@@ -51,7 +51,7 @@ const FootprintInform = ({ user, setUser }) => {
         "note": note,
         "inCsie": (location.includes("德田") || location.includes("資工"))
       });
-      
+      console.log("Finish");
     }
   };
 

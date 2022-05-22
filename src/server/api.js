@@ -1,48 +1,50 @@
 // import fs from "fs";
 //import * as fs from 'fs'
 // const fs = require('fs');
+import axios from 'axios'
+
+const API_ROOT = 'http://localhost:4000/api'
+const instance = axios.create({
+  baseURL: API_ROOT
+})
 
 const readData = async (filename) => {
-  // let data = await fs.readFileSync(__dirname + "/data/" + filename, "utf-8");
-  // data = JSON.parse(data.toString());
-  // return data;
   let data = await require(__dirname + "/data/" + filename);
-  // console.log(data);
   return data;
 };
 
-const appendData = async (filename, appendData) => {
-  if (!appendData || !Object.keys(appendData).length) return;
-  let data = await readData(filename);
-  let prev_data = await readData(filename);
-  await prev_data;
-  await data.push(appendData);
-  await data.sort((a, b) => b.key < a.key);
-  data = await JSON.stringify(data);
-  prev_data = await JSON.stringify(prev_data);
-  console.log("appendData (before): " + prev_data);
-  console.log("appendData (after): " + data);
-  // await fs.writeFileSync(__dirname + "/data/" + filename, data);
-};
+// const appendData = async (filename, appendData) => {
+//   if (!appendData || !Object.keys(appendData).length) return;
+//   let data = await readData(filename);
+//   let prev_data = await readData(filename);
+//   await prev_data;
+//   await data.push(appendData);
+//   await data.sort((a, b) => b.key < a.key);
+//   data = await JSON.stringify(data);
+//   prev_data = await JSON.stringify(prev_data);
+//   console.log("appendData (before): " + prev_data);
+//   console.log("appendData (after): " + data);
+//   // await fs.writeFileSync(__dirname + "/data/" + filename, data);
+// };
 
-const updateData = async (filename, updateData) => {
-  if (!updateData || !Object.keys(updateData).length) return;
-  let data = await readData(filename);
-  let prev_data = await readData(filename);
-  let index = await data.findIndex((item) => item.key === updateData.key);
-  if (index === -1) {
-    // await appendData(filename, updateData);
-  } else {
-    data[index] = Object.assign(data[index], updateData);
-    data = JSON.stringify(data);
-    prev_data = JSON.stringify(prev_data);
-    console.log("the updateData");
-    console.log(updateData);
-    console.log("updateData (before): " + prev_data);
-    console.log("updateData (after ): " + data);
-    // await fs.writeFileSync(__dirname + "/data/" + filename, data);
-  }
-};
+// const updateData = async (filename, updateData) => {
+//   if (!updateData || !Object.keys(updateData).length) return;
+//   let data = await readData(filename);
+//   let prev_data = await readData(filename);
+//   let index = await data.findIndex((item) => item.key === updateData.key);
+//   if (index === -1) {
+//     // await appendData(filename, updateData);
+//   } else {
+//     data[index] = Object.assign(data[index], updateData);
+//     data = JSON.stringify(data);
+//     prev_data = JSON.stringify(prev_data);
+//     console.log("the updateData");
+//     console.log(updateData);
+//     console.log("updateData (before): " + prev_data);
+//     console.log("updateData (after ): " + data);
+//     // await fs.writeFileSync(__dirname + "/data/" + filename, data);
+//   }
+// };
 
 /*
 const deleteData = async (filename, id) => {
@@ -91,17 +93,15 @@ const updateUser = async (data) => await updateData("users.json", data);
 
 const addConfirmedRooms = async (addData) =>
   await addInElement("confirmedRooms.json", addData, "rooms");
-const addFootprint = async (addData) => {
-  console.log(addData);
-  const data = await getFootprint();
-  data.push(addData);
-  try {
-    // await fs.writeFileSync(__dirname + "/data/footprint.json" , data);
-    await fs.writeFile(__dirname + "/data/footprint.json" , data);
-  } catch (err) {
-    throw err;
-  }
-  
+
+const addFootprint = async (newFootprint) => {
+  console.log(newFootprint);
+  const footprint = await getFootprint();
+  footprint.push(newFootprint)
+  const {
+    data: { message }
+  } = await instance.post('/addFootprint', { footprint });
+  console.log(message);
 };
 const addCSIEFootprint = async (addData) =>
   await addInElement("csiefootprint.json", addData, "places");
@@ -109,6 +109,21 @@ const addCSIEFootprint = async (addData) =>
 const getConfirmedUserKeys = async () => {
   let users = await getUsers();
   return users.filter(user => user.status === "confirmed").map(user => user.key);
+};
+
+const checkUser = async (account, password) => {
+  let users = await getUsers();
+  let anyUser = users.filter(
+    (user) => user.account === account && user.password === password
+  );
+  if (anyUser.length > 0)
+    return {
+      username: anyUser[0].username,
+      text: anyUser[0].text,
+      status: anyUser[0].status,
+      key: anyUser[0].key
+    };
+  else return {};
 };
 
 export {
@@ -125,5 +140,6 @@ export {
   addFootprint,
   addCSIEFootprint,
   getConfirmedUserKeys,
-  getLocationOptions
+  getLocationOptions,
+  checkUser
 };

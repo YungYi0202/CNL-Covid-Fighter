@@ -1,5 +1,5 @@
 import React from "react";
-import { getConfirmedRooms } from "../../backend/data";
+import { getConfirmedRooms } from "../../server/api";
 
 const Room = () => {
   const [dormitories, setDormitories] = React.useState([]);

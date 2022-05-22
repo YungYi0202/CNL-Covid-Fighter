@@ -1,6 +1,6 @@
 import React from "react";
 import { message, Button } from "antd";
-import { checkUser } from "../../backend/server";
+import { checkUser } from "../../server/api";
 import BeforeSingin from "./beforesignin";
 import AfterSignin from "./aftersignin";
 import { isEmpty } from "../utils/utils";

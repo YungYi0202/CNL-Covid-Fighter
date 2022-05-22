@@ -1,6 +1,6 @@
 import React from "react";
 import { DatePicker, Menu, Dropdown, message, Button, InputNumber } from "antd";
-import { addConfirmedRooms } from "../../backend/data";
+import { addConfirmedRooms } from "../../server/api";
 
 const { RangePicker } = DatePicker;
 

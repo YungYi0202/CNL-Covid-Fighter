@@ -2,28 +2,51 @@
   "name": "cnl-final",
   "version": "1.0.0",
   "description": "final project",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "nodemon"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "antd": "^4.20.5",
-    "fs": "^0.0.1-security",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0",
-    "react-scripts": "^2.1.3",
-    "styled-components": "^5.3.5"
+    "styled-components": "^5.3.5",
+    "axios": "^0.21.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "4.0.0"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.6",
+    "@babel/preset-env": "^7.12.1",
+    "nodemon": "^2.0.6"
+  }
 }

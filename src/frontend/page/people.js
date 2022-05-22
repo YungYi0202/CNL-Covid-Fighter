@@ -1,5 +1,5 @@
 import React from "react";
-import { getPeople } from "../../backend/data";
+import { getPeople } from "../../server/api";
 
 const People = () => {
   const [people, setPeople] = React.useState({ today: 0, accumulative: 0 });

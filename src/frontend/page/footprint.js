@@ -1,6 +1,6 @@
 import React from "react";
 import { InputNumber, Table } from 'antd';
-import { getFootprint, getConfirmedUserKeys } from "../../backend/data";
+import { getFootprint, getConfirmedUserKeys } from "../../server/api";
 
 const Footprint = () => {
   const [today, setToday] = React.useState(new Date());

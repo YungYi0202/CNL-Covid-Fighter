@@ -1,7 +1,7 @@
 import { Button, message } from "antd";
 import React from "react";
 import { isValidHttpUrl } from "../utils/utils";
-import { getHotels, getTelephones } from "../../backend/data";
+import { getHotels, getTelephones } from "../../server/api";
 
 const Hotels = () => {
   const [hotels, setHotels] = React.useState([]);

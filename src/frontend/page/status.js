@@ -1,6 +1,6 @@
 import React from "react";
 import { Menu } from "antd";
-import { updateUser } from "../../backend/data";
+import { updateUser } from "../../server/api";
 
 const items = [
   {

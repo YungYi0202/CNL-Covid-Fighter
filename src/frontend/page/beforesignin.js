@@ -2,7 +2,7 @@ import React from "react";
 import { Input, Button } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import styled from "styled-components";
-import { getCSIEFootprint } from "../../backend/data";
+import { getCSIEFootprint } from "../../server/api";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
 const Left = styled.div`
