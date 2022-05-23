@@ -2,6 +2,15 @@ import React from "react";
 import { InputNumber } from 'antd';
 import { getFootprint, getConfirmedUserKeys } from "../../../server/api";
 import FootprintTable from "./table";
+import { getDateFootprint } from "../../utils/utils";
+import styled from "styled-components";
+
+const Middle = styled.div`
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  padding: 50px;
+`;
 
 const Footprint = () => {
   const [today, setToday] = React.useState(new Date());
@@ -20,21 +29,7 @@ const Footprint = () => {
 
   React.useEffect(() => {
     let filteredData = rawData.filter(data => isWithinInterval(data));
-    let dict = {};
-    /* Show the recent data first.*/
-    for (let i = filteredData.length - 1; i >= 0; i--) {
-      const data = filteredData[i];
-      if (dict[data.date] === undefined) {
-        dict[data.date] = [];
-      }
-      dict[data.date].push({
-        "time": data.time,
-        "location": data.location,
-        "note": data.note,
-        "key": data.key
-      });
-    }
-    setDateFootprints(dict);
+    setDateFootprints(getDateFootprint(filteredData));
   }, [rawData, dayInterval]);
 
   function isWithinInterval(fp) {
@@ -42,15 +37,20 @@ const Footprint = () => {
     return date > (today - dayInterval * 86400000);
   }
 
+  
+
   return (
     <>
-      <InputNumber 
-      min={1} max={31} 
-      addonBefore={"顯示"}
-      addonAfter={"天內資料"}
-      defaultValue={dayInterval} 
-      onChange={(val) => {setDayInterval(val);}} />
-      
+      <Middle>
+        <InputNumber 
+          size="large"
+          min={1} max={31} 
+          addonBefore={"顯示"}
+          addonAfter={"天內資料"}
+          defaultValue={dayInterval} 
+          onChange={(val) => {setDayInterval(val);}} 
+        />
+      </Middle>
       <FootprintTable dateFootprints={dateFootprints} />
     </>
   );

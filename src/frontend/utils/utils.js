@@ -20,4 +20,22 @@ function isEmpty(obj) {
   return !Object.keys(obj).length;
 }
 
-export { getRandomInt, isValidHttpUrl, isEmpty };
+function getDateFootprint(filteredData) {
+  /* Show the recent data first.*/
+  let dict = {};
+  for (let i = filteredData.length - 1; i >= 0; i--) {
+    const data = filteredData[i];
+    if (dict[data.date] === undefined) {
+      dict[data.date] = [];
+    }
+    dict[data.date].push({
+      "time": data.time,
+      "location": data.location,
+      "note": data.note,
+      "key": data.key
+    });
+  }
+  return dict;
+}
+
+export { getRandomInt, isValidHttpUrl, isEmpty, getDateFootprint };

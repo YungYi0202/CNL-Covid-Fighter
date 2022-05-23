@@ -1,9 +1,13 @@
 import React from "react";
-import { Input, Button } from "antd";
+import { Input, Button, Card } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import styled from "styled-components";
-import { getCSIEFootprint } from "../../server/api";
+import { getFootprint } from "../../server/api";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import {getDateFootprint} from "../utils/utils"
+import FootprintTable from "./footprint/table"
+
+
 
 const Left = styled.div`
   width: 30%;
@@ -14,7 +18,6 @@ const Left = styled.div`
 `;
 
 const Right = styled.div`
-  background-color: grey;
   width: 65%;
   margin: 20px 0px 10px 5%;
   text-align: left;
@@ -22,13 +25,13 @@ const Right = styled.div`
 `;
 
 const BeforeSignin = ({ setAccount, setPassword, handleSubmitClick }) => {
-  const [csiefootprints, setcsieFootprints] = React.useState([]);
+  const [csiefootprints, setCsieFootprints] = React.useState({});
 
   React.useEffect(() => {
     async function awaitcsieFootprint() {
-      const tmp = await getCSIEFootprint();
-      console.log(tmp);
-      setcsieFootprints(tmp);
+      const rawData = await getFootprint();
+      const filteredData = rawData.filter(fp=>fp.inCsie);
+      setCsieFootprints(getDateFootprint(filteredData));
     }
     awaitcsieFootprint();
   }, []);
@@ -36,45 +39,35 @@ const BeforeSignin = ({ setAccount, setPassword, handleSubmitClick }) => {
   return (
     <>
       <Left>
-        <Input
-          prefix={<UserOutlined />}
-          onChange={(e) => setAccount(e.target.value)}
-          placeholder="Enter your account"
-          size="large"
-        />
-        <br />
-        <br />
-        <Input.Password
-          prefix={<UserOutlined />}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter your password"
-          iconRender={(visible) =>
-            visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-          }
-          size="large"
-        />
-        <br />
-        <br />
-        <Button block type="primary" onClick={handleSubmitClick}>
-          {" "}
-          Submit{" "}
-        </Button>
+        <Card >
+          <Input
+            prefix={<UserOutlined />}
+            onChange={(e) => setAccount(e.target.value)}
+            placeholder="Enter your account"
+            size="large"
+          />
+          <br />
+          <br />
+          <Input.Password
+            prefix={<UserOutlined />}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
+            iconRender={(visible) =>
+              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+            }
+            size="large"
+          />
+          <br />
+          <br />
+          <Button block type="primary" onClick={handleSubmitClick}>
+            {" "}
+            Submit{" "}
+          </Button>
+        </Card>
       </Left>
       <Right>
-        <h1 style={{ color: "#FFFFFF" }}> 系館確診足跡 </h1>
-        {csiefootprints.map((date, i) =>
-          date.places.length !== 0 ? (
-            <>
-              <h1 style={{ color: "#FFFFFF" }}> {date.key} </h1>
-              {date.places.map((room) => (
-                <h2 style={{ color: "#FFFFFF" }}> {room} </h2>
-              ))}{" "}
-            </>
-          ) : (
-            <></>
-          )
-        )}
-        <h1 style={{ color: "#FFFFFF" }}> TODO: map </h1>
+        <h1> 系館確診足跡 </h1>
+        <FootprintTable dateFootprints={csiefootprints}/>
       </Right>
     </>
   );

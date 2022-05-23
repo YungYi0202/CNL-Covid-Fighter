@@ -1,8 +1,10 @@
 import React from "react";
-import { TimePicker, DatePicker, Input, message, Button, Mentions, Divider, Form, Space } from "antd";
+import { TimePicker, DatePicker, Input, message, Button, Mentions, Divider, Card, Space} from "antd";
 import { addFootprint, getLocationOptions, getFootprint } from "../../../server/api";
 import { isEmpty } from "../../utils/utils";
 import FootprintTable from "./table";
+import { getDateFootprint } from "../../utils/utils";
+
 
 const { Option } = Mentions;
 
@@ -36,21 +38,7 @@ const FootprintInform = ({ user }) => {
     async function _setDateFootprints() {
       const rawData = await getFootprint();
       const filteredData = rawData.filter(fp => fp.userKey === userKey);
-      let dict = {};
-      /* Show the recent data first.*/
-      for (let i = filteredData.length - 1; i >= 0; i--) {
-        const data = filteredData[i];
-        if (dict[data.date] === undefined) {
-          dict[data.date] = [];
-        }
-        dict[data.date].push({
-          "time": data.time,
-          "location": data.location,
-          "note": data.note,
-          "key": data.key
-        });
-      }
-      setDateFootprints(dict);
+      setDateFootprints(getDateFootprint(filteredData));
     }
     _setDateFootprints();
   }, [userKey]);
@@ -113,42 +101,52 @@ const FootprintInform = ({ user }) => {
 
   return (
     <>
+      <Card>
       <h1>上傳足跡</h1>
-      <label>時間:   </label>
-      <DatePicker onChange={handleDateChange} allowClear={false} />
-      <TimePicker.RangePicker
-        onChange={handleTimeChange}
-        format="HH:mm"
-        allowClear={false}
-      />
+      <Space>
+      <label>時間:</label>
+        <DatePicker onChange={handleDateChange} allowClear={false} />
+        <TimePicker.RangePicker
+          onChange={handleTimeChange}
+          format="HH:mm"
+          allowClear={false}
+        />
+      </Space>
       <br></br>
+      <br></br>
+      <Space>
       <label>地點:   </label>
-      <Mentions
-        onChange={setLocation}
-        onSelect={(e) => {setLocation(e.value);}}
-        value={location}
-        prefix=""
-      >
-      {curLocationOptions.map(option => 
-        <Option value={option}>{option}</Option>
-      )}
-      </Mentions>
+        <Mentions
+          onChange={setLocation}
+          onSelect={(e) => {setLocation(e.value);}}
+          value={location}
+          prefix=""
+        >
+          {curLocationOptions.map(option => 
+            <Option value={option}>{option}</Option>
+          )}
+        </Mentions>
+      </Space>
       <br></br>
-      <label>備註:   </label>
-      <Input 
-        placeholder="例：樓層、教室" 
-        onChange={(e) => {setNote(e.target.value);}}
-      />
+      <br></br>
+      <Space>
+        <label>備註:   </label>
+        <Input 
+          placeholder="例：樓層、教室" 
+          onChange={(e) => {setNote(e.target.value);}}
+        />
+      </Space>
       <br></br>
       <br></br>
       <Button onClick={handleSubmitClick} size="large" type="primary">
         {" "}新增{" "}
       </Button>
-
+      </Card>
       <Divider />
-
+      <Card>
       <h1>我的足跡</h1>
       <FootprintTable dateFootprints={dateFootprints} />
+      </Card>
     </>
   );
 };

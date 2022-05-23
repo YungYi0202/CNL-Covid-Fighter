@@ -85,7 +85,6 @@ const getPeople = async () => await readData("people.json");
 const getConfirmedRooms = async () => await readData("confirmedRooms.json");
 const getHotels = async () => await readData("hotels.json");
 const getFootprint = async () => await readData("footprint.json");
-const getCSIEFootprint = async () => await readData("csiefootprint.json");
 const getTelephones = async () => await readData("telephones.json");
 const getLocationOptions = async () => await readData("locationOptions.json");
 
@@ -103,8 +102,6 @@ const addFootprint = async (newFootprint) => {
   } = await instance.post('/addFootprint', { footprint });
   return [message, newFootprint["key"]];
 };
-const addCSIEFootprint = async (addData) =>
-  await addInElement("csiefootprint.json", addData, "places");
 
 const getConfirmedUserKeys = async () => {
   let users = await getUsers();
@@ -134,11 +131,9 @@ export {
   getHotels,
   getFootprint,
   getTelephones,
-  getCSIEFootprint,
   updateUser,
   addConfirmedRooms,
   addFootprint,
-  addCSIEFootprint,
   getConfirmedUserKeys,
   getLocationOptions,
   checkUser
