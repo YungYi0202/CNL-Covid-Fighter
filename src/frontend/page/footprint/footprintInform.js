@@ -1,11 +1,12 @@
 import React from "react";
-import { TimePicker, DatePicker, Input, message, Button, Mentions } from "antd";
-import { addFootprint, getLocationOptions } from "../../server/api";
-import { isEmpty } from "../utils/utils";
+import { TimePicker, DatePicker, Input, message, Button, Mentions, Divider, Form, Space } from "antd";
+import { addFootprint, getLocationOptions, getFootprint } from "../../../server/api";
+import { isEmpty } from "../../utils/utils";
+import FootprintTable from "./table";
 
 const { Option } = Mentions;
 
-const FootprintInform = ({ user, setUser }) => {
+const FootprintInform = ({ user }) => {
   const [date, setDate] = React.useState("");
   const [timePrev, setTimePrev] = React.useState("");
   const [timeNext, setTimeNext] = React.useState("");
@@ -16,6 +17,7 @@ const FootprintInform = ({ user, setUser }) => {
   const [note, setNote] = React.useState("");
   const [allLocationOptions, setAllLocationOptions] = React.useState([]);
   const [curLocationOptions, setCurLocationOptions] = React.useState([]);
+  const [dateFootprints, setDateFootprints] = React.useState({});
 
   React.useEffect(() => {
     async function awaitAllLocationOptions() {
@@ -30,6 +32,29 @@ const FootprintInform = ({ user, setUser }) => {
     setCurLocationOptions(allLocationOptions.filter(l => l.includes(location)));
   }, [location]);
 
+  React.useEffect(() => {
+    async function _setDateFootprints() {
+      const rawData = await getFootprint();
+      const filteredData = rawData.filter(fp => fp.userKey === userKey);
+      let dict = {};
+      /* Show the recent data first.*/
+      for (let i = filteredData.length - 1; i >= 0; i--) {
+        const data = filteredData[i];
+        if (dict[data.date] === undefined) {
+          dict[data.date] = [];
+        }
+        dict[data.date].push({
+          "time": data.time,
+          "location": data.location,
+          "note": data.note,
+          "key": data.key
+        });
+      }
+      setDateFootprints(dict);
+    }
+    _setDateFootprints();
+  }, [userKey]);
+
   const handleSubmitClick = async () => {
     if (date==="") {
       message.error("請輸入日期");
@@ -41,20 +66,28 @@ const FootprintInform = ({ user, setUser }) => {
       message.error("請輸入地點");
     }
     else {
-      message.info("Submit!");
       let time = timePrev === timeNext ? timePrev : timePrev + "-" + timeNext;
-      await addFootprint({
+      const newData = {
         "date": date,
         "userKey": userKey,
         "time": time, 
         "location": location,
         "note": note,
         "inCsie": (location.includes("德田") || location.includes("資工"))
-      });
-      console.log("Finish");
+      };
+      const [msg, key] = await addFootprint(newData);
+      message.info(msg);
+      if (msg == "success") {
+        let dict = dateFootprints;
+        dict[date].push({
+          "time": time, 
+          "location": location,
+          "note": note,
+          "key": key
+        })
+      }
     }
   };
-
 
   function handleDateChange(e) {
     if (e) {
@@ -77,41 +110,45 @@ const FootprintInform = ({ user, setUser }) => {
       setTimeNext("");
     }
   }
-  
+
   return (
     <>
-      <h1> 日期 </h1>
+      <h1>上傳足跡</h1>
+      <label>時間:   </label>
       <DatePicker onChange={handleDateChange} allowClear={false} />
-      
-      <h1> 時段 </h1>
       <TimePicker.RangePicker
         onChange={handleTimeChange}
         format="HH:mm"
         allowClear={false}
       />
-      
-      <h1> 地點 </h1>
+      <br></br>
+      <label>地點:   </label>
       <Mentions
         onChange={setLocation}
-        onSelect={(e) => {setLocation(e.value)}}
+        onSelect={(e) => {setLocation(e.value);}}
         value={location}
         prefix=""
       >
-        {curLocationOptions.map(option => 
-          <Option value={option}>{option}</Option>
-        )}
+      {curLocationOptions.map(option => 
+        <Option value={option}>{option}</Option>
+      )}
       </Mentions>
-
-      <h1> 備註 </h1>
+      <br></br>
+      <label>備註:   </label>
       <Input 
-      placeholder="例：樓層、教室" 
-      onChange={(e) => {setNote(e.target.value);}}
+        placeholder="例：樓層、教室" 
+        onChange={(e) => {setNote(e.target.value);}}
       />
-      <br />
-      <br />
+      <br></br>
+      <br></br>
       <Button onClick={handleSubmitClick} size="large" type="primary">
-        {" "}Submit{" "}
+        {" "}新增{" "}
       </Button>
+
+      <Divider />
+
+      <h1>我的足跡</h1>
+      <FootprintTable dateFootprints={dateFootprints} />
     </>
   );
 };

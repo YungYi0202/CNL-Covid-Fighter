@@ -6,10 +6,10 @@ import Info from "../page/info";
 import Status from "../page/status";
 import Calendar from "../page/calendar";
 import RoomInform from "../page/roomInform";
-import FootprintInform from "../page/footprintInform";
+import FootprintInform from "../page/footprint/footprintInform";
 import People from "../page/people";
 import Room from "../page/room";
-import Footprint from "../page/footprint";
+import Footprint from "../page/footprint/footprint";
 import Stores from "../page/stores";
 import NewInfo from "../page/newInfo";
 import Hotels from "../page/hotels";
@@ -86,7 +86,6 @@ const App = () => {
   }, [user]);
 
   const onClick = (e) => {
-    message.info("click " + e.key);
     setCurrent(e.key);
   };
 
@@ -109,7 +108,7 @@ const App = () => {
       ) : current === "roomInform" ? (
         <RoomInform />
       ) : current === "footprintInform" ? (
-        <FootprintInform user={user} setUser={setUser}/>
+        <FootprintInform user={user}/>
       ) : current === "people" ? (
         <People />
       ) : current === "room" ? (

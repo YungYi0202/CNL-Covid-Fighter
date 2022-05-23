@@ -1,6 +1,7 @@
 import React from "react";
-import { InputNumber, Table } from 'antd';
-import { getFootprint, getConfirmedUserKeys } from "../../server/api";
+import { InputNumber } from 'antd';
+import { getFootprint, getConfirmedUserKeys } from "../../../server/api";
+import FootprintTable from "./table";
 
 const Footprint = () => {
   const [today, setToday] = React.useState(new Date());
@@ -29,7 +30,8 @@ const Footprint = () => {
       dict[data.date].push({
         "time": data.time,
         "location": data.location,
-        "note": data.note
+        "note": data.note,
+        "key": data.key
       });
     }
     setDateFootprints(dict);
@@ -40,24 +42,6 @@ const Footprint = () => {
     return date > (today - dayInterval * 86400000);
   }
 
-  const tableColumns = [
-    {
-      title: 'Time',
-      dataIndex: 'time',
-      defaultSortOrder: 'descend',
-      sorter: (a, b) => b.time > a.time,
-      sortDirections: ['descend'],
-    },
-    {
-      title: 'Location',
-      dataIndex: 'location',
-    },
-    {
-      title: 'Note',
-      dataIndex: 'note',
-    }
-  ];
-
   return (
     <>
       <InputNumber 
@@ -67,20 +51,7 @@ const Footprint = () => {
       defaultValue={dayInterval} 
       onChange={(val) => {setDayInterval(val);}} />
       
-      {Object.keys(dateFootprints).map((date, i) =>
-        dateFootprints[date].length !== 0 ? (
-          <>
-            <h1> {date} </h1>
-            <Table 
-            columns={tableColumns} 
-            dataSource={dateFootprints[date]}
-            pagination={{ pageSize: 50 }} scroll={{ y: 240 }}
-            />
-          </>
-        ) : (
-          <></>
-        )
-      )}
+      <FootprintTable dateFootprints={dateFootprints} />
     </>
   );
 };

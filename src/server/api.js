@@ -27,24 +27,24 @@ const readData = async (filename) => {
 //   // await fs.writeFileSync(__dirname + "/data/" + filename, data);
 // };
 
-// const updateData = async (filename, updateData) => {
-//   if (!updateData || !Object.keys(updateData).length) return;
-//   let data = await readData(filename);
-//   let prev_data = await readData(filename);
-//   let index = await data.findIndex((item) => item.key === updateData.key);
-//   if (index === -1) {
-//     // await appendData(filename, updateData);
-//   } else {
-//     data[index] = Object.assign(data[index], updateData);
-//     data = JSON.stringify(data);
-//     prev_data = JSON.stringify(prev_data);
-//     console.log("the updateData");
-//     console.log(updateData);
-//     console.log("updateData (before): " + prev_data);
-//     console.log("updateData (after ): " + data);
-//     // await fs.writeFileSync(__dirname + "/data/" + filename, data);
-//   }
-// };
+const updateData = async (filename, updateData) => {
+  if (!updateData || !Object.keys(updateData).length) return;
+  let data = await readData(filename);
+  let prev_data = await readData(filename);
+  let index = await data.findIndex((item) => item.key === updateData.key);
+  if (index === -1) {
+    // await appendData(filename, updateData);
+  } else {
+    data[index] = Object.assign(data[index], updateData);
+    data = JSON.stringify(data);
+    prev_data = JSON.stringify(prev_data);
+    console.log("the updateData");
+    console.log(updateData);
+    console.log("updateData (before): " + prev_data);
+    console.log("updateData (after ): " + data);
+    // await fs.writeFileSync(__dirname + "/data/" + filename, data);
+  }
+};
 
 /*
 const deleteData = async (filename, id) => {
@@ -95,13 +95,13 @@ const addConfirmedRooms = async (addData) =>
   await addInElement("confirmedRooms.json", addData, "rooms");
 
 const addFootprint = async (newFootprint) => {
-  console.log(newFootprint);
   const footprint = await getFootprint();
+  newFootprint["key"] = footprint.length;
   footprint.push(newFootprint)
   const {
     data: { message }
   } = await instance.post('/addFootprint', { footprint });
-  console.log(message);
+  return [message, newFootprint["key"]];
 };
 const addCSIEFootprint = async (addData) =>
   await addInElement("csiefootprint.json", addData, "places");
