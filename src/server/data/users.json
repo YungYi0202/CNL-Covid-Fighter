@@ -5,7 +5,7 @@
     "username": "林風",
     "text": ["今天是你隔離的第 3 天", "你要做快篩，快篩陰性的話blablabla。"],
     "status": "confirmed",
-    "key": "0"
+    "key": 0
   },
   {
     "account": "124",
@@ -13,7 +13,7 @@
     "username": "林雨",
     "text": [],
     "status": "Self-health monitoring",
-    "key": "1"
+    "key": 1
   },
   {
     "account": "125",
@@ -21,7 +21,7 @@
     "username": "林雪",
     "text": [],
     "status": "confirmed",
-    "key": "2"
+    "key": 2
   },
   {
     "account": "-1",
@@ -29,6 +29,6 @@
     "username": "訪客",
     "text": [],
     "status": "confirmed",
-    "key": "-1"
+    "key": -1
   }
 ]

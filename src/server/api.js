@@ -92,12 +92,13 @@ const updateUser = async (data) => await updateData("users.json", data);
 
 const addUser = async (newUser) => {
   const users = await getUsers();
+  console.log(`newuser = ${newUser["account"]}`);
   newUser["key"] = users.length;
   users.push(newUser)
   const {
     data: { message }
   } = await instance.post('/addUser', { users });
-  return [message, newUser["key"]];
+  return [message];
 };
 
 const addConfirmedRooms = async (addData) =>
@@ -133,6 +134,15 @@ const checkUser = async (account, password) => {
   else return {};
 };
 
+const userExist = async (account) => {
+  let users = await getUsers();
+  let anyUser = users.filter(
+    (user) => user.account === account
+  );
+  if (anyUser.length > 0) return true;
+  else return false;
+}
+
 export {
   getUsers,
   getStores,
@@ -146,5 +156,7 @@ export {
   addFootprint,
   getConfirmedUserKeys,
   getLocationOptions,
-  checkUser
+  checkUser,
+  userExist,
+  addUser
 };

@@ -35,6 +35,11 @@ const BeforeSignin = ({ setAccount, setPassword, handleSubmitClick }) => {
     awaitcsieFootprint();
   }, []);
 
+  const onSignUpClick = () => {
+    console.log("here");
+    setCurrent("none");
+  }
+
   return (
     <>
       <Left>
@@ -59,9 +64,7 @@ const BeforeSignin = ({ setAccount, setPassword, handleSubmitClick }) => {
           />
         ) : current === "signup" ? (
           <SignUpForm
-            setAccount={setAccount}
-            setPassword={setPassword}
-            handleSubmitClick={handleSubmitClick}
+            onSignUpClick={onSignUpClick}
           />
         ) : (
           <h1> Why???? </h1>

@@ -1,6 +1,6 @@
 import React from "react";
 import "antd/dist/antd.css";
-import { Menu, message } from "antd";
+import { Menu } from "antd";
 import Signin from "../page/signin";
 import Info from "../page/info";
 import Calendar from "../page/calendar";

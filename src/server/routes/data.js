@@ -12,7 +12,7 @@ exports.AddFootprint = async (req, res) => {
     });
 }
 exports.AddUser = async (req, res) => { 
-    fs.writeFile(__dirname + "/../data/users.json", JSON.stringify(req.body.footprint), (err) => { 
+    fs.writeFile(__dirname + "/../data/users.json", JSON.stringify(req.body.users), (err) => { 
         if (err) {
             console.log(err); 
             res.status(500).json({message: 'error'});
