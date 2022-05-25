@@ -1,7 +1,7 @@
 import React from "react";
 import { message, Button } from "antd";
 import { checkUser } from "../../server/api";
-import BeforeSingin from "./beforesignin";
+import BeforeSignin from "./beforesignin";
 import Status from "../page/status";
 import { isEmpty } from "../utils/utils";
 
@@ -34,11 +34,10 @@ const Signin = ({ user, setUser }) => {
       message.error("Error!");
     }
   };
-  console.log("here!!" + text);
   return (
     <>
       {!signedIn ? (
-        <BeforeSingin
+        <BeforeSignin
           setAccount={setAccount}
           setPassword={setPassword}
           handleSubmitClick={handleSubmitClick}

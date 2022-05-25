@@ -1,13 +1,11 @@
 import React from "react";
-import { Input, Button, Card } from "antd";
-import { UserOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { getFootprint } from "../../server/api";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import {getDateFootprint} from "../utils/utils"
+import { getDateFootprint } from "../utils/utils"
 import FootprintTable from "./footprint/table"
-
-
+import SignInForm from "./signInForm";
+import SignUpForm from "./signUpForm";
+import { Button } from "antd";
 
 const Left = styled.div`
   width: 30%;
@@ -25,12 +23,13 @@ const Right = styled.div`
 `;
 
 const BeforeSignin = ({ setAccount, setPassword, handleSubmitClick }) => {
+  const [current, setCurrent] = React.useState("none");
   const [csiefootprints, setCsieFootprints] = React.useState({});
 
   React.useEffect(() => {
     async function awaitcsieFootprint() {
       const rawData = await getFootprint();
-      const filteredData = rawData.filter(fp=>fp.inCsie);
+      const filteredData = rawData.filter(fp => fp.inCsie);
       setCsieFootprints(getDateFootprint(filteredData));
     }
     awaitcsieFootprint();
@@ -39,35 +38,39 @@ const BeforeSignin = ({ setAccount, setPassword, handleSubmitClick }) => {
   return (
     <>
       <Left>
-        <Card >
-          <Input
-            prefix={<UserOutlined />}
-            onChange={(e) => setAccount(e.target.value)}
-            placeholder="Enter your account"
-            size="large"
+        {current === "none" ? (
+          <div>
+            <Button block type="primary" onClick={() => setCurrent("signin")}>
+              {" "}
+              Sign in{" "}
+            </Button>
+            <br />
+            <br />
+            <Button block type="primary" onClick={() => setCurrent("signup")}>
+              {" "}
+              Sign up{" "}
+            </Button>
+          </div>
+        ) : current === "signin" ? (
+          <SignInForm
+            setAccount={setAccount}
+            setPassword={setPassword}
+            handleSubmitClick={handleSubmitClick}
           />
-          <br />
-          <br />
-          <Input.Password
-            prefix={<UserOutlined />}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            iconRender={(visible) =>
-              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-            }
-            size="large"
+        ) : current === "signup" ? (
+          <SignUpForm
+            setAccount={setAccount}
+            setPassword={setPassword}
+            handleSubmitClick={handleSubmitClick}
           />
-          <br />
-          <br />
-          <Button block type="primary" onClick={handleSubmitClick}>
-            {" "}
-            Submit{" "}
-          </Button>
-        </Card>
+        ) : (
+          <h1> Why???? </h1>
+        )}
+
       </Left>
       <Right>
         <h1> 系館確診足跡 </h1>
-        <FootprintTable dateFootprints={csiefootprints}/>
+        <FootprintTable dateFootprints={csiefootprints} />
       </Right>
     </>
   );
