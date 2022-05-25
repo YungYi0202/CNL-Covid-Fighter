@@ -17,7 +17,7 @@ const SignUpForm = ({ onSignUpClick }) => {
         "password": password,
         "username": username,
         "text": [],
-        "status": "",
+        "status": "healthy",
         "key": ""
       };
       const [msg] = await addUser(newUser);
@@ -30,6 +30,14 @@ const SignUpForm = ({ onSignUpClick }) => {
   
   return (
     <Card >
+      <Input
+        prefix={<UserOutlined />}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Enter your username"
+        size="large"
+      />
+      <br />
+      <br />
       <Input
         prefix={<UserOutlined />}
         onChange={(e) => setAccount(e.target.value)}
