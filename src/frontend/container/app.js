@@ -3,7 +3,6 @@ import "antd/dist/antd.css";
 import { Menu, message } from "antd";
 import Signin from "../page/signin";
 import Info from "../page/info";
-import Status from "../page/status";
 import Calendar from "../page/calendar";
 import RoomInform from "../page/roomInform";
 import FootprintInform from "../page/footprint/footprintInform";
@@ -17,17 +16,12 @@ import { isEmpty } from "../utils/utils";
 
 const items = [
   {
-    label: "登入",
+    label: "我的狀態",
     key: "signin"
   },
   {
     label: "臺大疫情資訊",
     key: "info"
-  },
-  {
-    label: "我的狀態",
-    key: "status",
-    disabled: true
   },
   {
     label: "我的防疫日曆",
@@ -101,8 +95,6 @@ const App = () => {
         <Signin user={user} setUser={setUser} />
       ) : current === "info" ? (
         <Info />
-      ) : current === "status" ? (
-        <Status user={user} setUser={setUser} />
       ) : current === "calendar" ? (
         <Calendar />
       ) : current === "roomInform" ? (

@@ -2,7 +2,7 @@ import React from "react";
 import { message, Button } from "antd";
 import { checkUser } from "../../server/api";
 import BeforeSingin from "./beforesignin";
-import AfterSignin from "./aftersignin";
+import Status from "../page/status";
 import { isEmpty } from "../utils/utils";
 
 const Signin = ({ user, setUser }) => {
@@ -44,10 +44,10 @@ const Signin = ({ user, setUser }) => {
           handleSubmitClick={handleSubmitClick}
         />
       ) : (
-        <AfterSignin
-          username={username}
+        <Status
+          user={user}
+          setUser={setUser}
           handleLogoutClick={handleLogoutClick}
-          text={text}
         />
       )}
     </>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu } from "antd";
+import { Menu, Button } from "antd";
 import { updateUser } from "../../server/api";
 
 const items = [
@@ -29,7 +29,8 @@ const items = [
   }
 ];
 
-const Status = ({ user, setUser }) => {
+const Status = ({ user, setUser, handleLogoutClick }) => {
+  const [username, setUsername] = React.useState(user.username);
   const [status, setStatus] = React.useState(user.status);
 
   React.useEffect(() => {
@@ -48,7 +49,7 @@ const Status = ({ user, setUser }) => {
 
   return (
     <>
-      <h1> Current Status: {status} </h1>
+      <h1> 歡迎，{username}！你當前的狀態為： {status} </h1>
       <Menu
         onClick={onClick}
         selectedKeys={[status]}
@@ -60,6 +61,7 @@ const Status = ({ user, setUser }) => {
         需要列下來自己上傳過的足跡嗎？ （陳咏誼更：已做，當使用者設定自己的狀態為確診，就會自動將他的足跡列在台大確診足跡<br />
         發現打錯可以刪掉嗎？（感覺是比較次要的功能） <br />
       </h1>
+      <Button onClick={handleLogoutClick}> Logout </Button>
     </>
   );
 };
