@@ -65,7 +65,7 @@ const addInElement = async (filename, addData, propName) => {
   let index = await data.findIndex((item) => item.key === addData.key);
   console.log(index);
   if (index === -1) {
-    appendData(filename, addData);
+    // appendData(filename, addData);
   } else {
     console.log(addData[propName]);
     data[index][propName] = data[index][propName].concat(addData[propName]);
@@ -89,6 +89,16 @@ const getTelephones = async () => await readData("telephones.json");
 const getLocationOptions = async () => await readData("locationOptions.json");
 
 const updateUser = async (data) => await updateData("users.json", data);
+
+const addUser = async (newUser) => {
+  const users = await getUsers();
+  newUser["key"] = users.length;
+  users.push(newUser)
+  const {
+    data: { message }
+  } = await instance.post('/addUser', { users });
+  return [message, newUser["key"]];
+};
 
 const addConfirmedRooms = async (addData) =>
   await addInElement("confirmedRooms.json", addData, "rooms");
