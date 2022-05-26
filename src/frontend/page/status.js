@@ -1,8 +1,10 @@
 import React from "react";
 import { Menu, Button } from "antd";
 import { updateUser } from "../../server/api";
+import Info from "../page/info";
+import Confirmed from "../page/confirmed";
 
-const items = [
+const status = [
   {
     label: "healthy",
     key: "healthy"
@@ -24,43 +26,57 @@ const items = [
     key: "Self-health monitoring"
   },
   {
-    label: "Rapid test negative ",
+    label: "Rapid test negative",
     key: "Rapid test negative"
   }
 ];
 
 const Status = ({ user, setUser, handleLogoutClick }) => {
   const [username, setUsername] = React.useState(user.username);
-  const [status, setStatus] = React.useState(user.status);
+  const [current_status, setCurrentStatus] = React.useState(user.status);
 
   React.useEffect(() => {
     async function awaitConfirmedRooms() {
-      console.log({ ...user, status: status });
-      await updateUser({ ...user, status: status });
+      console.log({ ...user, status: current_status });
+      await updateUser({ ...user, status: current_status });
     }
     awaitConfirmedRooms();
   });
 
   const onClick = (e) => {
     console.log("click ", e);
-    setStatus(e.key);
+    setCurrentStatus(e.key);
     setUser((prevState) => ({ ...prevState, status: e.key }));
   };
 
   return (
     <>
-      <h1> 歡迎，{username}！你當前的狀態為： {status} </h1>
+      <h1> 歡迎，{username}！你當前的狀態為： {current_status} </h1>
       <Menu
         onClick={onClick}
-        selectedKeys={[status]}
+        selectedKeys={[current_status]}
         mode="inline"
-        items={items}
+        items={status}
       />
-      <h1>
-        我的確診足跡： <br />
-        需要列下來自己上傳過的足跡嗎？ （陳咏誼更：已做，當使用者設定自己的狀態為確診，就會自動將他的足跡列在台大確診足跡<br />
-        發現打錯可以刪掉嗎？（感覺是比較次要的功能） <br />
-      </h1>
+      <br />
+      <br />
+      {current_status === "healthy" ? (
+        <Info />
+      ) : current_status === "confirmed" ? (
+        <Confirmed />
+      ) : current_status === "Stay-at-home order" ? (
+        <Info />
+      ) : current_status === "Self-quarantine" ? (
+        <Info />
+      ) : current_status === "Self-health monitoring" ? (
+        <Info />
+      ) : current_status === "Rapid test negative" ? (
+        <Info />
+      ) : (
+        <h1> Why???? </h1>
+      )}
+      <br />
+      <br />
       <Button onClick={handleLogoutClick}> Logout </Button>
     </>
   );
