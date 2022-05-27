@@ -101,11 +101,8 @@ const addUser = async (newUser) => {
 const updateUser = async (user) => {
   const users = await getUsers();
   user["key"] = users.length;
-  console.log(`account = ${user["account"]}`)
   const index = users.findIndex((e) => e["account"] === user["account"])
-  console.log(`index = ${index}`)
   users[index] = user;
-  console.log(`users = ${users[0]["status"]}`)
   const {
     data: { message }
   } = await instance.post('/updateUser', { users });

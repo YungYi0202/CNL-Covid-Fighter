@@ -12,6 +12,7 @@ import Footprint from "../page/footprint/footprint";
 import Stores from "../page/stores";
 import NewInfo from "../page/newInfo";
 import Hotels from "../page/hotels";
+import Setting from "../page/setting";
 import { isEmpty } from "../utils/utils";
 
 const items = [
@@ -61,6 +62,10 @@ const items = [
   {
     label: "防疫交通住宿",
     key: "traffic"
+  },
+  {
+    label: "設定",
+    key: "setting"
   }
 ];
 
@@ -113,6 +118,8 @@ const App = () => {
         <NewInfo />
       ) : current === "traffic" ? (
         <Hotels />
+      ) : current === "setting" ? (
+        <Setting user={user} setUser={setUser} />
       ) : (
         <h1> Why???? </h1>
       )}
