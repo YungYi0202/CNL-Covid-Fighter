@@ -2,6 +2,7 @@ import React from "react";
 import { Menu, Button} from "antd";
 import Info from "../page/info";
 import Confirmed from "../page/confirmed";
+import Contact from "../page/contact";
 
 const situation = [
   {
@@ -39,7 +40,7 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
       {current_situation === "confirmed" ? (
         <Confirmed user={user} setUser={setUser} back={back}/>
       ) : current_situation === "is_contact" ? (
-        <Info />
+        <Contact user={user} setUser={setUser} back={back}/>
       ) : (
         <h1> 喵 </h1>
       )}

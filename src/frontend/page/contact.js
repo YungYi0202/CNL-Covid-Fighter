@@ -1,8 +1,8 @@
 import React from "react";
-import { DatePicker, message, Button, Upload } from "antd";
+import { DatePicker, message, Button } from "antd";
 import { updateUser } from "../../server/api";
 
-const Confirmed = ({ user, setUser, back }) => {
+const Contact = ({ user, setUser, back }) => {
   const [date, setDate] = React.useState("");
   
   function handleDateChange(e) {
@@ -19,7 +19,7 @@ const Confirmed = ({ user, setUser, back }) => {
       message.error("請輸入日期");
     }
     else {
-      const updatedUser = { ...user, confirmed: true, confirmed_date: date };
+      const updatedUser = { ...user, is_contacts: true, contact_date: date };
       setUser(updatedUser);
       const [msg] = await updateUser(updatedUser);
       back();
@@ -28,25 +28,15 @@ const Confirmed = ({ user, setUser, back }) => {
 
   return (
     <>
-      <label> PCR / 快篩陽性日期: </label>
+      <label> 最後接觸日期: </label>
       <DatePicker onChange={handleDateChange} allowClear={false} />
       <br />
       <br />
       <Button onClick={handleSubmitClick} size="large" type="primary">
         {" "}submit{" "}
       </Button>
-      <br />
-      <br />
-      <a href="https://www.cdc.gov.tw/Category/MPage/9wonLmQrvAdSAx55Ec7aWw">
-        衛福部確診個案自主回報疫調系統
-      </a>
-      <br />
-      <br />
-      <a href="https://my.ntu.edu.tw/ntuwdc/ConfirmedReport.aspx">
-        臺大確診者通報
-      </a>
     </>
   );
 };
 
-export default Confirmed;
+export default Contact;
