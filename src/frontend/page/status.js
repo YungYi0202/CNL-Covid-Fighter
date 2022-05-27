@@ -1,6 +1,5 @@
 import React from "react";
-import { Menu, Button, message } from "antd";
-import { updateUser } from "../../server/api";
+import { Menu, Button} from "antd";
 import Info from "../page/info";
 import Confirmed from "../page/confirmed";
 
