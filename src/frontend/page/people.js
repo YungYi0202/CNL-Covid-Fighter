@@ -1,5 +1,15 @@
 import React from "react";
 import { getPeople } from "../../server/api";
+import styled from "styled-components";
+
+
+const PageWindow = styled.div`
+  width: 100%;
+  height: 100%;
+  margin: 0px 0px 0px 0px;
+  text-align: center;
+  vertical-align: top;
+`;
 
 const People = () => {
   const [people, setPeople] = React.useState({ today: 0, accumulative: 0 });
@@ -14,10 +24,9 @@ const People = () => {
 
   return (
     <>
-      <h1> 今日確診： </h1>
-      <h1> {people.today} </h1>
-      <h1> 累積確診： </h1>
-      <h1> {people.accumulative} </h1>
+    <PageWindow>
+      <img src="https://my.ntu.edu.tw/ntuwdc/nasattach/main.jpg" ></img>
+    </PageWindow>
     </>
   );
 };
