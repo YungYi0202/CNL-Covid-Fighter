@@ -7,4 +7,5 @@ exports.routes = (app) => {
 //   app.get('/api/getContents', wrap(dataRoute.GetContents))
     app.post('/api/addFootprint', wrap(dataRoute.AddFootprint));
     app.post('/api/addUser', wrap(dataRoute.AddUser));
+    app.post('/api/updateUser', wrap(dataRoute.UpdateUser));
 }

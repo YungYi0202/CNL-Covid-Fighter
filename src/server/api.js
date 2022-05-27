@@ -88,16 +88,27 @@ const getFootprint = async () => await readData("footprint.json");
 const getTelephones = async () => await readData("telephones.json");
 const getLocationOptions = async () => await readData("locationOptions.json");
 
-const updateUser = async (data) => await updateData("users.json", data);
-
 const addUser = async (newUser) => {
   const users = await getUsers();
-  console.log(`newuser = ${newUser["account"]}`);
   newUser["key"] = users.length;
   users.push(newUser)
   const {
     data: { message }
   } = await instance.post('/addUser', { users });
+  return [message];
+};
+
+const updateUser = async (user) => {
+  const users = await getUsers();
+  user["key"] = users.length;
+  console.log(`account = ${user["account"]}`)
+  const index = users.findIndex((e) => e["account"] === user["account"])
+  console.log(`index = ${index}`)
+  users[index] = user;
+  console.log(`users = ${users[0]["status"]}`)
+  const {
+    data: { message }
+  } = await instance.post('/updateUser', { users });
   return [message];
 };
 
@@ -125,12 +136,7 @@ const checkUser = async (account, password) => {
     (user) => user.account === account && user.password === password
   );
   if (anyUser.length > 0)
-    return {
-      username: anyUser[0].username,
-      text: anyUser[0].text,
-      status: anyUser[0].status,
-      key: anyUser[0].key
-    };
+    return anyUser[0];
   else return {};
 };
 

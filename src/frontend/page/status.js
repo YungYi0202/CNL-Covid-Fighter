@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, Button } from "antd";
+import { Menu, Button, message } from "antd";
 import { updateUser } from "../../server/api";
 import Info from "../page/info";
 import Confirmed from "../page/confirmed";
@@ -37,8 +37,9 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
 
   React.useEffect(() => {
     async function awaitConfirmedRooms() {
-      console.log({ ...user, status: current_status });
-      await updateUser({ ...user, status: current_status });
+      user["status"] = current_status;
+      const [msg] = await updateUser(user);
+      message.info(msg);
     }
     awaitConfirmedRooms();
   });
