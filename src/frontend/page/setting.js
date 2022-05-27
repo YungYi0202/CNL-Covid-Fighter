@@ -175,7 +175,7 @@ const Setting = ({ user, setUser }) => {
       <br />
       <Select
         onChange={(value) => setDormitory(value)}
-        style={{ width: 320 }}
+        style={{ width: 1182 }}
         size="large"
         defaultValue={dormitory}
       >
@@ -193,7 +193,7 @@ const Setting = ({ user, setUser }) => {
       <br />
       <Select
         onChange={(value) => setVaccine1(value)}
-        style={{ width: 320 }}
+        style={{ width: 1182 }}
         size="large"
         defaultValue={vaccine1}
         placeholder="Enter your first dose"
@@ -204,7 +204,7 @@ const Setting = ({ user, setUser }) => {
       <br />
       <Select
         onChange={(value) => setVaccine2(value)}
-        style={{ width: 320 }}
+        style={{ width: 1182 }}
         size="large"
         defaultValue={vaccine2}
         placeholder="Enter your second dose"
@@ -215,7 +215,7 @@ const Setting = ({ user, setUser }) => {
       <br />
       <Select
         onChange={(value) => setVaccine3(value)}
-        style={{ width: 320 }}
+        style={{ width: 1182 }}
         size="large"
         defaultValue={vaccine3}
         placeholder="Enter your third dose"
