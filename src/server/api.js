@@ -123,7 +123,7 @@ const addFootprint = async (newFootprint) => {
 
 const getConfirmedUserKeys = async () => {
   let users = await getUsers();
-  return users.filter(user => user.status === "confirmed").map(user => user.key);
+  return users.filter(user => user.confirmed === true).map(user => user.key);
 };
 
 const checkUser = async (account, password) => {

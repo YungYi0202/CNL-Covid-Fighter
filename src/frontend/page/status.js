@@ -22,6 +22,10 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
     setCurrentSituation(e.key);
   };
 
+  const back = () => {
+    setCurrentSituation("");
+  };
+
   return (
     <>
       <h1> 歡迎，{username}！你當前的狀態為： {user.status} </h1>
@@ -33,11 +37,11 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
       <br />
       <br />
       {current_situation === "confirmed" ? (
-        <Confirmed />
+        <Confirmed user={user} setUser={setUser} back={back}/>
       ) : current_situation === "is_contact" ? (
         <Info />
       ) : (
-        <h1> 你很健康！ </h1>
+        <h1> 喵 </h1>
       )}
       <br />
       <br />

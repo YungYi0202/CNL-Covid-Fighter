@@ -76,10 +76,8 @@ const App = () => {
 
   React.useEffect(() => {
     if (!isEmpty(user)) {
-      console.log("notempty");
       setMenu(() => items.map((item) => ({ ...item, disabled: false })));
     } else {
-      console.log("empty");
       setMenu(items);
     }
   }, [user]);
