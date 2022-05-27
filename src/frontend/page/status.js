@@ -39,7 +39,6 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
     async function awaitConfirmedRooms() {
       user["status"] = current_status;
       const [msg] = await updateUser(user);
-      message.info(msg);
     }
     awaitConfirmedRooms();
   });

@@ -149,7 +149,6 @@ const Setting = ({ user, setUser }) => {
     }
     setUser(newUser);
     const [msg] = await updateUser(newUser);
-    message.info(msg);
   };
 
   return (
