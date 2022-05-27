@@ -1,1 +1,1 @@
-[{"account":"123","password":"123","username":"林風","text":[],"status":"Self-quarantine","dormitory":"男一舍","room":"107","vaccine":{"num_doses":3,"doses":["BNT","AZ","BNT"]},"key":1}]
+[{"account":"123","password":"123","username":"林風","text":[],"status":"self-health monitoring","dormitory":"男一舍","room":"101","vaccine":{"num_doses":3,"doses":["AZ","AZ","Moderna"]},"confirmed":false,"confirmed_date":"","is_contacts":false,"contact_date":"","key":0}]

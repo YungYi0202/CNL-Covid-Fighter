@@ -100,7 +100,6 @@ const addUser = async (newUser) => {
 
 const updateUser = async (user) => {
   const users = await getUsers();
-  user["key"] = users.length;
   const index = users.findIndex((e) => e["account"] === user["account"])
   users[index] = user;
   const {

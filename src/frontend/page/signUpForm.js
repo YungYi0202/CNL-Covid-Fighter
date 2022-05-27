@@ -145,13 +145,17 @@ const SignUpForm = ({ onSignUpClick }) => {
         "password": password,
         "username": username,
         "text": [],
-        "status": "healthy",
+        "status": "self-health monitoring",
         "dormitory": dormitory,
         "room": room,
         "vaccine": {
           "num_doses": doses.length,
           "doses": doses
         },
+        "confirmed": false,
+        "confirmed_date": "",
+        "is_contacts": false,
+        "contact_date": "",
         "key": ""
       };
       const [msg] = await addUser(newUser);

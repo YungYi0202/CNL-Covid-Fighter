@@ -145,7 +145,11 @@ const Setting = ({ user, setUser }) => {
         "num_doses": doses.length,
         "doses": doses
       },
-      "key": ""
+      "confirmed": user.confirmed,
+      "confirmed_date": user.confirmed_date,
+      "is_contacts": user.is_contacts,
+      "contact_date": user.contact_date,
+      "key": user.key
     }
     setUser(newUser);
     const [msg] = await updateUser(newUser);

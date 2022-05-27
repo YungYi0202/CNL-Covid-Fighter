@@ -4,76 +4,41 @@ import { updateUser } from "../../server/api";
 import Info from "../page/info";
 import Confirmed from "../page/confirmed";
 
-const status = [
-  {
-    label: "healthy",
-    key: "healthy"
-  },
+const situation = [
   {
     label: "confirmed",
     key: "confirmed"
   },
   {
-    label: "Stay-at-home order",
-    key: "Stay-at-home order"
-  },
-  {
-    label: "Self-quarantine",
-    key: "Self-quarantine"
-  },
-  {
-    label: "Self-health monitoring",
-    key: "Self-health monitoring"
-  },
-  {
-    label: "Rapid test negative",
-    key: "Rapid test negative"
+    label: "is_contact",
+    key: "is_contact"
   }
 ];
 
 const Status = ({ user, setUser, handleLogoutClick }) => {
   const [username, setUsername] = React.useState(user.username);
-  const [current_status, setCurrentStatus] = React.useState(user.status);
-
-  React.useEffect(() => {
-    async function awaitConfirmedRooms() {
-      user["status"] = current_status;
-      const [msg] = await updateUser(user);
-    }
-    awaitConfirmedRooms();
-  });
+  const [current_situation, setCurrentSituation] = React.useState("");
 
   const onClick = (e) => {
-    console.log("click ", e);
-    setCurrentStatus(e.key);
-    setUser((prevState) => ({ ...prevState, status: e.key }));
+    setCurrentSituation(e.key);
   };
 
   return (
     <>
-      <h1> 歡迎，{username}！你當前的狀態為： {current_status} </h1>
+      <h1> 歡迎，{username}！你當前的狀態為： {user.status} </h1>
       <Menu
         onClick={onClick}
-        selectedKeys={[current_status]}
         mode="inline"
-        items={status}
+        items={situation}
       />
       <br />
       <br />
-      {current_status === "healthy" ? (
-        <Info />
-      ) : current_status === "confirmed" ? (
+      {current_situation === "confirmed" ? (
         <Confirmed />
-      ) : current_status === "Stay-at-home order" ? (
-        <Info />
-      ) : current_status === "Self-quarantine" ? (
-        <Info />
-      ) : current_status === "Self-health monitoring" ? (
-        <Info />
-      ) : current_status === "Rapid test negative" ? (
+      ) : current_situation === "is_contact" ? (
         <Info />
       ) : (
-        <h1> Why???? </h1>
+        <h1> 你很健康！ </h1>
       )}
       <br />
       <br />
