@@ -19,6 +19,7 @@ const Info = () => {
 
   return (
     <>
+      {/* <h1> 五秒後會自動在新的分頁開啟臺大的疫情網頁 </h1> */}
       <PageWindow dangerouslySetInnerHTML={{ __html: `"<iframe src='${link}' height='1000' width='1500' />"`}} />
       <Button block type="link" onClick={() => window.open(link)}>
         點此開啟臺大的疫情網頁

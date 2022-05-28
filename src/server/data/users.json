@@ -1,1 +1,1 @@
-[{"account":"123","password":"123","username":"林雨","text":[],"status":"self-health monitoring","dormitory":"男一舍","room":"101","vaccine":{"num_doses":3,"doses":["AZ","AZ","Moderna"]},"confirmed":true,"confirmed_date":"2022/05/24","is_contacts":true,"contact_date":"2022/05/01","key":0}]
+[{"account":"123","password":"123","username":"林風","text":[],"status":"self-health monitoring","email":"1234@ntu.edu.tw","dormitory":"男一舍","room":"123","vaccine":{"num_doses":3,"doses":["AZ","AZ","AZ"]},"confirmed":false,"confirmed_date":"","is_contacts":false,"contact_date":"","key":0}]

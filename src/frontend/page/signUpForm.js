@@ -126,12 +126,13 @@ const SignUpForm = ({ onSignUpClick, setCurrent }) => {
   const [password, setPassword] = React.useState("");
   const [dormitory, setDormitory] = React.useState("");
   const [room, setRoom] = React.useState("");
-  const [vaccine1, setVaccine1] = React.useState("")
-  const [vaccine2, setVaccine2] = React.useState("")
-  const [vaccine3, setVaccine3] = React.useState("")
+  const [vaccine1, setVaccine1] = React.useState("");
+  const [vaccine2, setVaccine2] = React.useState("");
+  const [vaccine3, setVaccine3] = React.useState("");
+  const [email, setEmail] = React.useState("");
 
   const handleSignUpClick = async () => {
-    if (account === "" || password === "" || username === "" || dormitory === "" || room === "") {
+    if (account === "" || password === "" || username === "" || dormitory === "" || room === "" || email === "") {
       message.error("您有未填欄位");
       return;
     }
@@ -148,6 +149,7 @@ const SignUpForm = ({ onSignUpClick, setCurrent }) => {
         "status": "self-health monitoring",
         "dormitory": dormitory,
         "room": room,
+        "email": email,
         "vaccine": {
           "num_doses": doses.length,
           "doses": doses
@@ -191,6 +193,14 @@ const SignUpForm = ({ onSignUpClick, setCurrent }) => {
         iconRender={(visible) =>
           visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
         }
+        size="large"
+      />
+      <br />
+      <br />
+      <Input
+        prefix={<UserOutlined />}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Enter your email"
         size="large"
       />
       <br />
@@ -248,8 +258,7 @@ const SignUpForm = ({ onSignUpClick, setCurrent }) => {
       <br />
       <br />
       <Button block type="primary" onClick={handleSignUpClick}>
-        {" "}
-        Sign up{" "}
+        {" "}註冊{" "}
       </Button>
     </Card>
   );

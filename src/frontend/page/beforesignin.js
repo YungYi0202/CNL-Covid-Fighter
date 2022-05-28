@@ -46,14 +46,12 @@ const BeforeSignin = ({ setAccount, setPassword, handleSubmitClick }) => {
         {current === "none" ? (
           <div>
             <Button block type="primary" onClick={() => setCurrent("signin")}>
-              {" "}
-              Sign in{" "}
+              {" "}登入{" "}
             </Button>
             <br />
             <br />
             <Button block type="primary" onClick={() => setCurrent("signup")}>
-              {" "}
-              Sign up{" "}
+              {" "}註冊{" "}
             </Button>
           </div>
         ) : current === "signin" ? (

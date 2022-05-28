@@ -31,8 +31,7 @@ const SignInForm = ({ setAccount, setPassword, handleSubmitClick, setCurrent}) =
       <br />
       <br />
       <Button block type="primary" onClick={handleSubmitClick}>
-        {" "}
-        Sign in{" "}
+        {" "}登入{" "}
       </Button>
     </Card>
   );

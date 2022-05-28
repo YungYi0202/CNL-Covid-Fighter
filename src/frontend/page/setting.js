@@ -123,6 +123,7 @@ vaccines.forEach(add_vaccine_option);
 const Setting = ({ user, setUser }) => {
   const [username, setUsername] = React.useState(user.username);
   const [password, setPassword] = React.useState(user.password);
+  const [email, setEmail] = React.useState(user.email);
   const [dormitory, setDormitory] = React.useState(user.dormitory);
   const [room, setRoom] = React.useState(user.room);
   const [vaccine1, setVaccine1] = React.useState(user.vaccine.doses[0] ?? "")
@@ -139,6 +140,7 @@ const Setting = ({ user, setUser }) => {
       "username": username,
       "text": [],
       "status": user.status,
+      "email": email,
       "dormitory": dormitory,
       "room": room,
       "vaccine": {
@@ -172,6 +174,14 @@ const Setting = ({ user, setUser }) => {
         iconRender={(visible) =>
           visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
         }
+        size="large"
+      />
+      <br />
+      <br />
+      <Input
+        prefix={<UserOutlined />}
+        onChange={(e) => setEmail(e.target.value)}
+        defaultValue={email}
         size="large"
       />
       <br />
