@@ -33,7 +33,7 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
   };
 
   const back = () => {
-    setCurrentSituation("confirmed");
+    setReport(false);
   };
 
   return (
