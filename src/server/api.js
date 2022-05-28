@@ -133,9 +133,9 @@ const addFootprint = async (newFootprint) => {
   return [message, newFootprint["key"]];
 };
 
-const getConfirmedUserKeys = async () => {
+const getEverConfirmedUsers = async () => {
   let users = await getUsers();
-  return users.filter(user => user.confirmed === true).map(user => user.key);
+  return users.filter(user => user.confirmed_date !== "");
 };
 
 const checkUser = async (account, password) => {
@@ -168,7 +168,7 @@ export {
   updateUser,
   addConfirmedRooms,
   addFootprint,
-  getConfirmedUserKeys,
+  getEverConfirmedUsers,
   getLocationOptions,
   checkUser,
   userExist,

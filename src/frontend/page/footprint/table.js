@@ -9,18 +9,18 @@ import { Table } from 'antd';
 const FootprintTable = ({ dateFootprints }) => {
   const tableColumns = [
     {
-      title: 'Time',
+      title: '時間',
       dataIndex: 'time',
       defaultSortOrder: 'descend',
       sorter: (a, b) => b.time > a.time,
       sortDirections: ['descend'],
     },
     {
-      title: 'Location',
+      title: '地點',
       dataIndex: 'location',
     },
     {
-      title: 'Note',
+      title: '備註',
       dataIndex: 'note',
     }
   ];

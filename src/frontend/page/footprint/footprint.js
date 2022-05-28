@@ -1,15 +1,15 @@
 import React from "react";
 import { InputNumber } from 'antd';
-import { getFootprint, getConfirmedUserKeys } from "../../../server/api";
+import { getFootprint, getEverConfirmedUsers } from "../../../server/api";
 import FootprintTable from "./table";
-import { getDateFootprint } from "../../utils/utils";
+import { getDateFootprint, isDangerDateForUser } from "../../utils/utils";
 import styled from "styled-components";
 
 const Middle = styled.div`
   display: flex;
   justify-content: center; 
   align-items: center; 
-  padding: 50px;
+  padding: 20px;
 `;
 
 const Footprint = () => {
@@ -22,12 +22,14 @@ const Footprint = () => {
 
   React.useEffect(() => {
     async function awaitFootprint() {
-      const response = await getFootprint();
-      const confirmedUserKeys = await getConfirmedUserKeys();
-      setRawData(response.filter(res => confirmedUserKeys.includes(res.userKey) ));
+      let fps = await getFootprint();
+      const users = await getEverConfirmedUsers();
+      const userKeys = users.map(user => user.key);
+      fps = fps.filter(fp => userKeys.includes(fp.userKey) && isDangerDateForUser(fp.date, users[fp.userKey], incubationPeriod) );
+      setRawData(fps);
     }
     awaitFootprint();
-  }, []);
+  }, [incubationPeriod]);
 
   React.useEffect(() => {
     let filteredData = rawData.filter(data => isWithinInterval(data));
@@ -39,8 +41,6 @@ const Footprint = () => {
     return date > (today - dayInterval * 86400000);
   }
 
-  
-
   return (
     <>
       <Middle>
@@ -51,6 +51,16 @@ const Footprint = () => {
           addonAfter={"天內資料"}
           defaultValue={dayInterval} 
           onChange={(val) => {setDayInterval(val);}} 
+        />
+      </Middle>
+      <Middle>
+        <InputNumber 
+          size="large"
+          min={0} max={14} 
+          addonBefore={"假定淺伏期為"}
+          addonAfter={"天"}
+          defaultValue={incubationPeriod} 
+          onChange={(val) => {setIncubationPeriod(val);}} 
         />
       </Middle>
       <FootprintTable dateFootprints={dateFootprints} />
