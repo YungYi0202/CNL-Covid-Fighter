@@ -1,9 +1,10 @@
 import React from "react";
-import { Menu, Button, Card } from "antd";
+import { Button, Card, Select } from "antd";
 import Confirmed from "../page/confirmed";
 import Contact from "../page/contact";
 
-const situation = [
+const { Option } = Select;
+const situations = [
   {
     label: "confirmed",
     key: "confirmed"
@@ -14,22 +15,26 @@ const situation = [
   }
 ];
 
-const Report = ({ user, setUser, back }) => {
-  const onClick = (e) => {
-    setCurrentSituation(e.key);
-  };
+const situations_node = [];
+function add_situation_option(situation) {
+  situations_node.push(<Option value={situation["key"]}>{situation["label"]}</Option>);
+}
+situations.forEach(add_situation_option);
 
+const Report = ({ user, setUser, back }) => {
   const [current_situation, setCurrentSituation] = React.useState("confirmed");
 
   return (
     <>
       <Card>
-        <Menu
-          onClick={onClick}
-          selectedKeys={[current_situation]}
-          mode="inline"
-          items={situation}
-        />
+        <Select
+          onChange={(value) => setCurrentSituation(value)}
+          style={{ width: 300 }}
+          size="large"
+          defaultValue={current_situation}
+        >
+          {situations_node}
+        </Select>
         <br />
         <br />
         {current_situation === "confirmed" ? (
