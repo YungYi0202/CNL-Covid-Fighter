@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, Button} from "antd";
+import { Menu, Button } from "antd";
 import Info from "../page/info";
 import Confirmed from "../page/confirmed";
 import Contact from "../page/contact";
@@ -17,32 +17,51 @@ const situation = [
 
 const Status = ({ user, setUser, handleLogoutClick }) => {
   const [username, setUsername] = React.useState(user.username);
-  const [current_situation, setCurrentSituation] = React.useState("");
+  const [report, setReport] = React.useState(false);
+  const [current_situation, setCurrentSituation] = React.useState("confirmed");
 
   const onClick = (e) => {
     setCurrentSituation(e.key);
   };
 
+  const handleReportClick = () => {
+    setReport(true);
+  };
+
+  const handleNotReportClick = () => {
+    setReport(false);
+  };
+
   const back = () => {
-    setCurrentSituation("");
+    setCurrentSituation("confirmed");
   };
 
   return (
     <>
       <h1> 歡迎，{username}！你當前的狀態為： {user.status} </h1>
-      <Menu
-        onClick={onClick}
-        mode="inline"
-        items={situation}
-      />
-      <br />
-      <br />
-      {current_situation === "confirmed" ? (
-        <Confirmed user={user} setUser={setUser} back={back}/>
-      ) : current_situation === "is_contact" ? (
-        <Contact user={user} setUser={setUser} back={back}/>
+      {report === true ? (
+        <>
+          <Menu
+            onClick={onClick}
+            selectedKeys={[current_situation]}
+            mode="inline"
+            items={situation}
+          />
+          <br />
+          <br />
+          {current_situation === "confirmed" ? (
+            <Confirmed user={user} setUser={setUser} back={back} />
+          ) : current_situation === "is_contact" ? (
+            <Contact user={user} setUser={setUser} back={back} />
+          ) : (
+            <h1> Should not come to this page... </h1>
+          )}
+          <br />
+          <br />
+          <Button onClick={handleNotReportClick}> Back </Button>
+        </>
       ) : (
-        <h1> 喵 </h1>
+        <Button onClick={handleReportClick}> 我要通報確診 / 密切接觸者 </Button>
       )}
       <br />
       <br />
