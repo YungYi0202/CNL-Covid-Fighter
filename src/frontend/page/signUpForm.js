@@ -181,8 +181,6 @@ const SignUpForm = ({ onSignUpClick, setCurrent }) => {
   };
 
   React.useEffect(() => {
-    console.log("flag");
-    console.log(vaccine1);
     if (vaccine1 === "尚未接種" || vaccine1 === "") {
       setAllowVaccine2(false);
     } else {

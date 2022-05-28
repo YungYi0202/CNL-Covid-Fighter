@@ -17,6 +17,8 @@ const Footprint = () => {
   const [dayInterval, setDayInterval] = React.useState(7);
   const [rawData, setRawData] = React.useState([]);
   const [dateFootprints, setDateFootprints] = React.useState({});
+  const [incubationPeriod, setIncubationPeriod] = React.useState(7);
+
 
   React.useEffect(() => {
     async function awaitFootprint() {
