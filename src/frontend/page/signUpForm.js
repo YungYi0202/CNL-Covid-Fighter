@@ -168,6 +168,7 @@ const SignUpForm = ({ onSignUpClick, setCurrent }) => {
         },
         "confirmed": false,
         "confirmed_date": "",
+        "recover_date": "",
         "is_contacts": false,
         "contact_date": "",
         "key": ""
