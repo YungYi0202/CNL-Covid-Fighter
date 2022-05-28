@@ -135,24 +135,14 @@ const Setting = ({ user, setUser }) => {
     doses.filter(dose => dose !== "");
 
     const newUser = {
-      "account": user.account,
-      "password": password,
-      "username": username,
-      "text": [],
-      "status": user.status,
-      "email": email,
-      "dormitory": dormitory,
-      "room": room,
-      "vaccine": {
-        "num_doses": doses.length,
-        "doses": doses
-      },
-      "confirmed": user.confirmed,
-      "confirmed_date": user.confirmed_date,
-      "is_contacts": user.is_contacts,
-      "contact_date": user.contact_date,
-      "key": user.key
-    }
+      ...user,
+      password: password,
+      username: username,
+      email: email,
+      dormitory: dormitory,
+      room: room,
+      vaccine: {"num_doses": doses.length, "doses": doses}
+    };
     setUser(newUser);
     await updateUser(newUser);
   };

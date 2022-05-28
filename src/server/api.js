@@ -98,9 +98,21 @@ const addUser = async (newUser) => {
   return [message];
 };
 
+const updateContactsAfterConfirmed = (users, confirmedUser) => {
+  for(let i = 0; i < users.length; i++) {
+    if(users[i]["account"] !== confirmedUser["account"] && users[i]["dormitory"] === confirmedUser["dormitory"] &&
+      users[i]["room"] === confirmedUser["room"]) {
+      users[i] = {...users[i], is_contacts: true, contact_date: confirmedUser["confirmed_date"]};
+    }
+  }
+}
+
 const updateUser = async (user) => {
   const users = await getUsers();
   const index = users.findIndex((e) => e["account"] === user["account"])
+  if(users[index]["confirmed"] === false && user["confirmed"] === true) { // If it is an confirmed update.
+    updateContactsAfterConfirmed(users, user);
+  }
   users[index] = user;
   const {
     data: { message }
