@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { getFootprint } from "../../server/api";
+import { getFootprint, getEverConfirmedUsers } from "../../server/api";
 import { getDateFootprint } from "../utils/utils"
 import FootprintTable from "./footprint/table"
 import SignInForm from "./signInForm";
@@ -29,7 +29,9 @@ const BeforeSignin = ({ setAccount, setPassword, handleSubmitClick }) => {
   React.useEffect(() => {
     async function awaitcsieFootprint() {
       const rawData = await getFootprint();
-      const filteredData = rawData.filter(fp => fp.inCsie);
+      const users = await getEverConfirmedUsers();
+      const userKeys = users.map(user => user.key);
+      const filteredData = rawData.filter(fp => fp.inCsie && userKeys.includes(fp.userKey));
       setCsieFootprints(getDateFootprint(filteredData));
     }
     awaitcsieFootprint();

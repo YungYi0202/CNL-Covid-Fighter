@@ -1,6 +1,6 @@
 import React from "react";
 import { getConfirmedRooms } from "../../server/api";
-import { Select, InputNumber, Table } from 'antd';
+import { Select, InputNumber, Table, Card, Divider } from 'antd';
 import styled from "styled-components";
 
 const Middle = styled.div`
@@ -103,8 +103,7 @@ const Room = () => {
         tmp[dorm] = list.filter(data => isWithinInterval(data)).map(
           (data) => {
             return {
-              "date": data.date,
-              "room": data.room,
+              ...data,
               "recoverNegative": data.recoverNegative? "是":"否"
             }; 
           }
@@ -122,41 +121,50 @@ const Room = () => {
 
   return (
     <>
-    <Middle>
-        <InputNumber 
+    <Card  style={{
+      marginTop: "20px",
+      background: "#f0f0f0",
+      borderColor: "#bebebe"
+    }}>
+      <Middle>
+          <InputNumber 
+            size="large"
+            min={1} max={31} 
+            addonBefore={"顯示"}
+            addonAfter={"天內資料"}
+            defaultValue={dayInterval} 
+            onChange={(val) => {setDayInterval(val);}} 
+          />
+      </Middle>
+      <Middle>
+        <Select
           size="large"
-          min={1} max={31} 
-          addonBefore={"顯示"}
-          addonAfter={"天內資料"}
-          defaultValue={dayInterval} 
-          onChange={(val) => {setDayInterval(val);}} 
-        />
-    </Middle>
-    <Middle>
-      <Select
-        size="large"
-        mode="multiple"
-        style={{
-          width: '100%',
-        }}
-        showSearch
-        placeholder="篩選宿舍"
-        optionFilterProp="children"
-        onChange={(value) => {
-          if (value.length === 0) {
-            setSelectedDorms(dormsOptions);
-          } else {
-            setSelectedDorms(value);
-          }
-        }}
-        filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-      >
-        {dormsOptions.map(option => 
-          <Option value={option}>{option}</Option>
-        )}
-      </Select>
-    </Middle>
-    <ConfirmedDormTable confirmedRoomData={shownData}></ConfirmedDormTable>
+          mode="multiple"
+          style={{
+            width: '100%',
+          }}
+          showSearch
+          placeholder="篩選宿舍"
+          optionFilterProp="children"
+          onChange={(value) => {
+            if (value.length === 0) {
+              setSelectedDorms(dormsOptions);
+            } else {
+              setSelectedDorms(value);
+            }
+          }}
+          filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+        >
+          {dormsOptions.map(option => 
+            <Option value={option}>{option}</Option>
+          )}
+        </Select>
+      </Middle>
+    </Card>
+    <Divider />
+    <Card>
+      <ConfirmedDormTable confirmedRoomData={shownData}></ConfirmedDormTable>
+    </Card>
     </>
   );
 };

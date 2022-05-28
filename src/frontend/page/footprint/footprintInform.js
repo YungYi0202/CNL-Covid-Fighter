@@ -65,15 +65,17 @@ const FootprintInform = ({ user }) => {
       };
       const [msg, key] = await addFootprint(newData);
       message.info(msg);
-      if (msg == "success") {
-        let dict = dateFootprints;
-        dict[date].push({
-          "time": time, 
-          "location": location,
-          "note": note,
-          "key": key
-        })
-      }
+      // if (msg == "success") {
+      //   if (dateFootprints[date] === undefined) {
+      //     dateFootprints[date] = [];
+      //   }
+      //   dateFootprints[date].push({
+      //     "time": time, 
+      //     "location": location,
+      //     "note": note,
+      //     "key": key
+      //   });
+      // }
     }
   };
 

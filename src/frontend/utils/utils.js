@@ -23,8 +23,7 @@ function isEmpty(obj) {
 function getDateFootprint(filteredData) {
   /* Show the recent data first.*/
   let dict = {};
-  for (let i = filteredData.length - 1; i >= 0; i--) {
-    const data = filteredData[i];
+  for (const data of filteredData) {
     if (dict[data.date] === undefined) {
       dict[data.date] = [];
     }

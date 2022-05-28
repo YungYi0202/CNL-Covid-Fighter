@@ -26,21 +26,29 @@ const FootprintTable = ({ dateFootprints }) => {
   ];
   return (
     <>
-      {Object.keys(dateFootprints).map((date, i) =>
-        dateFootprints[date].length !== 0 ? (
-          <>
-            <h2> {date} </h2>
-            <Table
-              columns={tableColumns}
-              dataSource={dateFootprints[date]}
-              pagination={{ pageSize: 50 }}
-              scroll={{ y: 240 }}
-            />
-          </>
-        ) : (
-          <></>
+      {
+        
+        Object.keys(dateFootprints).length === 0?
+        <>
+          <h2>目前無確診足跡</h2>
+        </>
+        :
+        Object.keys(dateFootprints).map((date, i) =>
+          dateFootprints[date].length !== 0 ? (
+            <>
+              <h2> {date} </h2>
+              <Table
+                columns={tableColumns}
+                dataSource={dateFootprints[date]}
+                pagination={{ pageSize: 50 }}
+                scroll={{ y: 240 }}
+              />
+            </>
+          ) : (
+            <></>
+          )
         )
-      )}
+      }
     </>
   );
 };

@@ -120,16 +120,27 @@ const updateUser = async (user) => {
   return [message];
 };
 
-const addConfirmedRooms = async (addData) =>
-  await addInElement("confirmedRooms.json", addData, "rooms");
+/**
+ * 
+ * @param {Object} info {"dormitory": ..., "room": ..., "date": ...} 
+ */
+const addConfirmedRooms = async (info) => {
+  const confirmedRooms = await getConfirmedRooms();
+  confirmedRooms[info.dormitory].push({"room": info.room, "date": info.date});
+  const {
+    data: { message }
+  } = await instance.post('/updateConfirmedRooms', { confirmedRooms });
+  return message;
+}
 
 const addFootprint = async (newFootprint) => {
   const footprint = await getFootprint();
   newFootprint["key"] = footprint.length;
   footprint.push(newFootprint)
+  footprint.sort( function ( a, b ) { return new Date(b.date) - new Date(a.date); } );
   const {
     data: { message }
-  } = await instance.post('/addFootprint', { footprint });
+  } = await instance.post('/updateFootprint', { footprint });
   return [message, newFootprint["key"]];
 };
 

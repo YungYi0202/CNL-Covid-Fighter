@@ -1,5 +1,5 @@
 import React from "react";
-import { InputNumber } from 'antd';
+import { InputNumber, Card , Divider} from 'antd';
 import { getFootprint, getEverConfirmedUsers } from "../../../server/api";
 import FootprintTable from "./table";
 import { getDateFootprint, isDangerDateForUser } from "../../utils/utils";
@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 const Middle = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center; 
   align-items: center; 
   padding: 20px;
@@ -17,7 +18,7 @@ const Footprint = () => {
   const [dayInterval, setDayInterval] = React.useState(7);
   const [rawData, setRawData] = React.useState([]);
   const [dateFootprints, setDateFootprints] = React.useState({});
-  const [incubationPeriod, setIncubationPeriod] = React.useState(7);
+  const [incubationPeriod, setIncubationPeriod] = React.useState(3);
 
 
   React.useEffect(() => {
@@ -43,6 +44,12 @@ const Footprint = () => {
 
   return (
     <>
+      <Card style={{
+        marginTop: "20px",
+        background: "#f0f0f0",
+        borderColor: "#bebebe"
+      }}
+      >
       <Middle>
         <InputNumber 
           size="large"
@@ -56,14 +63,19 @@ const Footprint = () => {
       <Middle>
         <InputNumber 
           size="large"
-          min={0} max={14} 
+          min={0} max={dayInterval} 
           addonBefore={"假定淺伏期為"}
           addonAfter={"天"}
           defaultValue={incubationPeriod} 
           onChange={(val) => {setIncubationPeriod(val);}} 
         />
+        <span style={{color: "#7e7e7e"}}>顯示確診者 確診前淺伏期 至 康復陰性日 的足跡</span>
       </Middle>
+      </Card>
+      <Divider></Divider>
+      <Card>
       <FootprintTable dateFootprints={dateFootprints} />
+      </Card>
     </>
   );
 };
