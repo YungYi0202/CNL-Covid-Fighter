@@ -169,8 +169,12 @@ const SignUpForm = ({ onSignUpClick, setCurrent }) => {
         "confirmed": false,
         "confirmed_date": "",
         "recover_date": "",
+        "entrant": false,
+        "entry_date": "",
         "is_contacts": false,
         "contact_date": "",
+        "contact_of_contacts": false,
+        "contact_contacts_date": "",
         "key": ""
       };
       const [msg] = await addUser(newUser);

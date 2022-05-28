@@ -2,16 +2,25 @@ import React from "react";
 import { Button, Card, Select } from "antd";
 import Confirmed from "../page/confirmed";
 import Contact from "../page/contact";
+import Entrant from "../page/entrant";
 
 const { Option } = Select;
 const situations = [
   {
-    label: "confirmed",
+    label: "PCR/快篩陽性",
     key: "confirmed"
   },
   {
-    label: "is_contact",
+    label: "入境者",
+    key: "entrant"
+  },
+  {
+    label: "確診者同住親友",
     key: "is_contact"
+  },
+  {
+    label: "確診者的密切接觸者的接觸者",
+    key: "contact_of_contacts"
   }
 ];
 
@@ -40,6 +49,10 @@ const Report = ({ user, setUser, back }) => {
         {current_situation === "confirmed" ? (
           <Confirmed user={user} setUser={setUser} back={back} />
         ) : current_situation === "is_contact" ? (
+          <Contact user={user} setUser={setUser} back={back} />
+        ) : current_situation === "entrant" ? (
+          <Entrant user={user} setUser={setUser} back={back} />
+        ) : current_situation === "contact_of_contacts" ? (
           <Contact user={user} setUser={setUser} back={back} />
         ) : (
           <h1> Should not come to this page... </h1>
