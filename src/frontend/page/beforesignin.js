@@ -61,10 +61,12 @@ const BeforeSignin = ({ setAccount, setPassword, handleSubmitClick }) => {
             setAccount={setAccount}
             setPassword={setPassword}
             handleSubmitClick={handleSubmitClick}
+            setCurrent={setCurrent}
           />
         ) : current === "signup" ? (
           <SignUpForm
             onSignUpClick={onSignUpClick}
+            setCurrent={setCurrent}
           />
         ) : (
           <h1> Why???? </h1>

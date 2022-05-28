@@ -2,9 +2,7 @@ import React from "react";
 import "antd/dist/antd.css";
 import { Menu } from "antd";
 import Signin from "../page/signin";
-import Info from "../page/info";
 import Calendar from "../page/calendar";
-import RoomInform from "../page/roomInform";
 import FootprintInform from "../page/footprint/footprintInform";
 import People from "../page/people";
 import Room from "../page/room";
@@ -17,27 +15,27 @@ import { isEmpty } from "../utils/utils";
 
 const items = [
   {
-    label: "我的狀態",
+    label: "首頁",
     key: "signin"
   },
   {
-    label: "臺大疫情資訊",
-    key: "info"
-  },
-  {
-    label: "我的防疫日曆",
-    key: "calendar",
-    disabled: true
-  },
-  {
-    label: "確診寢室通報",
-    key: "roomInform",
-    disabled: true
-  },
-  {
-    label: "我的足跡通報",
-    key: "footprintInform",
-    disabled: true
+    label: '會員中心',
+    key: 'memberCenter',
+    disabled: true,
+    children: [
+      {
+        label: "我的防疫日曆",
+        key: "calendar",
+      },
+      {
+        label: "我的足跡通報",
+        key: "footprintInform"
+      },
+      {
+        label: "設定",
+        key: "setting"
+      }
+    ]
   },
   {
     label: "臺大確診人數",
@@ -62,10 +60,6 @@ const items = [
   {
     label: "防疫交通住宿",
     key: "traffic"
-  },
-  {
-    label: "設定",
-    key: "setting"
   }
 ];
 
@@ -96,12 +90,8 @@ const App = () => {
       />
       {current === "signin" ? (
         <Signin user={user} setUser={setUser} />
-      ) : current === "info" ? (
-        <Info />
       ) : current === "calendar" ? (
         <Calendar />
-      ) : current === "roomInform" ? (
-        <RoomInform />
       ) : current === "footprintInform" ? (
         <FootprintInform user={user}/>
       ) : current === "people" ? (

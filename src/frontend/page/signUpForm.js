@@ -120,7 +120,7 @@ function add_vaccine_option(vaccine) {
 }
 vaccines.forEach(add_vaccine_option);
 
-const SignUpForm = ({ onSignUpClick }) => {
+const SignUpForm = ({ onSignUpClick, setCurrent }) => {
   const [username, setUsername] = React.useState("");
   const [account, setAccount] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -241,6 +241,10 @@ const SignUpForm = ({ onSignUpClick }) => {
       >
         {vaccines_node}
       </Select>
+      <br/>
+      <Button block type="link" onClick={() => setCurrent("signin")}>
+      已有帳號？登入
+      </Button>
       <br />
       <br />
       <Button block type="primary" onClick={handleSignUpClick}>
