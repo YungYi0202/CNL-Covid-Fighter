@@ -1,5 +1,5 @@
 import React from "react";
-import { message, Input, Button, Card, Menu, Dropdown, Select } from "antd";
+import { Input, Button, Card, Select } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { updateUser } from "../../server/api";
@@ -154,7 +154,7 @@ const Setting = ({ user, setUser }) => {
       "key": user.key
     }
     setUser(newUser);
-    const [msg] = await updateUser(newUser);
+    await updateUser(newUser);
   };
 
   return (

@@ -2,7 +2,6 @@ import React from "react";
 import "antd/dist/antd.css";
 import { Menu } from "antd";
 import Signin from "../page/signin";
-import Info from "../page/info";
 import Calendar from "../page/calendar";
 import RoomInform from "../page/roomInform";
 import FootprintInform from "../page/footprint/footprintInform";
