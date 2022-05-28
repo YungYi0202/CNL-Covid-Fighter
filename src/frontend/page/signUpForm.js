@@ -1,12 +1,15 @@
 import React from "react";
-import { message, Input, Button, Card, Select } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { message, Input, Button, Card, Select, Form } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { userExist, addUser } from "../../server/api";
 
 const { Option } = Select;
 const dormitories =
   [
+    {
+      label: "無",
+      key: "無"
+    },
     {
       label: "男一舍",
       key: "男一舍"
@@ -89,13 +92,17 @@ const dormitories =
     }
   ];
 
-const dormitories_node = [];
-function add_dorm_option(dorm) {
-  dormitories_node.push(<Option value={dorm["key"]}>{dorm["label"]}</Option>);
+const dormitoriesNode = [];
+function addDormOptions(dorm) {
+  dormitoriesNode.push(<Option value={dorm["key"]}>{dorm["label"]}</Option>);
 }
-dormitories.forEach(add_dorm_option);
+dormitories.forEach(addDormOptions);
 
 const vaccines = [
+  {
+    label: "尚未接種",
+    key: "尚未接種"
+  },
   {
     label: "AZ",
     key: "AZ"
@@ -114,30 +121,35 @@ const vaccines = [
   }
 ]
 
-const vaccines_node = [];
-function add_vaccine_option(vaccine) {
-  vaccines_node.push(<Option value={vaccine["key"]}>{vaccine["label"]}</Option>);
+const vaccinesNode = [];
+function addVaccineOptions(vaccine) {
+  vaccinesNode.push(<Option value={vaccine["key"]}>{vaccine["label"]}</Option>);
 }
-vaccines.forEach(add_vaccine_option);
+vaccines.forEach(addVaccineOptions);
+
+const disabledSelector = <Select size="large" disabled></Select>;
 
 const SignUpForm = ({ onSignUpClick, setCurrent }) => {
   const [username, setUsername] = React.useState("");
   const [account, setAccount] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [dormitory, setDormitory] = React.useState("");
+  const [allowRoom, setAllowRoom] = React.useState(false);
   const [room, setRoom] = React.useState("");
   const [vaccine1, setVaccine1] = React.useState("");
   const [vaccine2, setVaccine2] = React.useState("");
+  const [allowVaccine2, setAllowVaccine2] = React.useState(false);
   const [vaccine3, setVaccine3] = React.useState("");
+  const [allowVaccine3, setAllowVaccine3] = React.useState(false);
   const [email, setEmail] = React.useState("");
 
   const handleSignUpClick = async () => {
-    if (account === "" || password === "" || username === "" || dormitory === "" || room === "" || email === "") {
+    if (account === "" || password === "" || username === "" || dormitory === "" || email === "" || vaccine1 === "") {
       message.error("您有未填欄位");
       return;
     }
     let doses = [vaccine1, vaccine2, vaccine3];
-    doses.filter(dose => dose !== "");
+    doses.filter(dose => dose !== "" || dose !== "尚未接種");
 
     const res = await userExist(account);
     if (!res) {
@@ -167,91 +179,129 @@ const SignUpForm = ({ onSignUpClick, setCurrent }) => {
     }
     onSignUpClick();
   };
+
+  React.useEffect(() => {
+    console.log("flag");
+    console.log(vaccine1);
+    if (vaccine1 === "尚未接種" || vaccine1 === "") {
+      setAllowVaccine2(false);
+    } else {
+      setAllowVaccine2(true);
+    }
+  }, [vaccine1]);
+
+  React.useEffect(() => {
+    if (vaccine2 === "尚未接種" || vaccine2 === "") {
+      setAllowVaccine3(false);
+    } else {
+      setAllowVaccine3(true);
+    }
+  }, [vaccine2]);
+
+  React.useEffect(() => {
+    if (!allowVaccine2) {
+      setVaccine2("");
+    }
+  }, [allowVaccine2]);
+
+  React.useEffect(() => {
+    if (!allowVaccine3) {
+      setVaccine3("");
+    }
+  }, [allowVaccine3]);
+
+  React.useEffect(() => {
+    if (dormitory === "無" || dormitory === "") {
+      setAllowRoom(false);
+    } else {
+      setAllowRoom(true);
+    }
+  }, [dormitory]);
+
+  React.useEffect(() => {
+    if (!allowRoom) {
+      setRoom("");
+    }
+  }, [allowRoom]);
   
   return (
     <Card >
-      <Input
-        prefix={<UserOutlined />}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Enter your username"
-        size="large"
-      />
-      <br />
-      <br />
-      <Input
-        prefix={<UserOutlined />}
-        onChange={(e) => setAccount(e.target.value)}
-        placeholder="Enter your account"
-        size="large"
-      />
-      <br />
-      <br />
-      <Input.Password
-        prefix={<UserOutlined />}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Enter your password"
-        iconRender={(visible) =>
-          visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-        }
-        size="large"
-      />
-      <br />
-      <br />
-      <Input
-        prefix={<UserOutlined />}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Enter your email"
-        size="large"
-      />
-      <br />
-      <br />
-      <Select
-        onChange={(value) => setDormitory(value)}
-        style={{ width: 320 }}
-        size="large"
-        placeholder="Enter your dormitory"
-      >
-        {dormitories_node}
-      </Select>
-      <br />
-      <br />
-      <Input
-        prefix={<UserOutlined />}
-        onChange={(e) => setRoom(e.target.value)}
-        placeholder="Enter your room"
-        size="large"
-      />
-      <br />
-      <br />
-      <Select
-        onChange={(value) => setVaccine1(value)}
-        style={{ width: 320 }}
-        size="large"
-        placeholder="Enter your first dose"
-      >
-        {vaccines_node}
-      </Select>
-      <br />
-      <br />
-      <Select
-        onChange={(value) => setVaccine2(value)}
-        style={{ width: 320 }}
-        size="large"
-        placeholder="Enter your second dose"
-      >
-        {vaccines_node}
-      </Select>
-      <br />
-      <br />
-      <Select
-        onChange={(value) => setVaccine3(value)}
-        style={{ width: 320 }}
-        size="large"
-        placeholder="Enter your third dose"
-      >
-        {vaccines_node}
-      </Select>
-      <br/>
+      <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
+        <Form.Item label="使用者名稱">
+          <Input
+            onChange={(e) => setUsername(e.target.value)}
+            size="large"
+          />
+        </Form.Item>
+        <Form.Item label="帳號">
+          <Input
+            onChange={(e) => setAccount(e.target.value)}
+            size="large"
+          />
+        </Form.Item>
+        <Form.Item label="密碼">
+          <Input.Password
+            onChange={(e) => setPassword(e.target.value)}
+            iconRender={(visible) =>
+              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+            }
+            size="large"
+          />
+        </Form.Item>
+        <Form.Item label="電子郵件">
+          <Input
+            onChange={(e) => setEmail(e.target.value)}
+            size="large"
+          />
+        </Form.Item>
+        <Form.Item label="宿舍">
+          <Select
+            onChange={(value) => setDormitory(value)}
+            size="large"
+          >
+            {dormitoriesNode}
+          </Select>
+        </Form.Item>
+        <Form.Item label="寢室">
+          {
+          allowRoom?
+            <Input
+              onChange={(e) => setRoom(e.target.value)}
+              size="large" value={room}
+            />
+          :
+            <Input size="large" disabled/>
+          }
+        </Form.Item>
+        <Form.Item label="第一劑">
+          <Select
+            onChange={(value) => setVaccine1(value)}
+            size="large" value={vaccine1}
+          >
+            {vaccinesNode}
+          </Select>
+        </Form.Item>
+        <Form.Item label="第二劑">
+          {allowVaccine2?
+          <Select
+            onChange={(value) => setVaccine2(value)}
+            size="large" value={vaccine2}
+          >
+            {vaccinesNode}
+          </Select>
+          : disabledSelector}
+        </Form.Item>
+        <Form.Item label="第三劑">
+          {allowVaccine3?
+          <Select
+            onChange={(value) => setVaccine3(value)}
+            size="large" value={vaccine3}
+          >
+            {vaccinesNode}
+          </Select>: disabledSelector}
+        </Form.Item>
+      </Form>
+ 
       <Button block type="link" onClick={() => setCurrent("signin")}>
       已有帳號？登入
       </Button>
