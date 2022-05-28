@@ -21,10 +21,6 @@ const items = [
     key: "signin"
   },
   {
-    label: "臺大疫情資訊",
-    key: "info"
-  },
-  {
     label: "我的防疫日曆",
     key: "calendar",
     disabled: true
@@ -65,7 +61,8 @@ const items = [
   },
   {
     label: "設定",
-    key: "setting"
+    key: "setting",
+    disabled: true
   }
 ];
 
@@ -96,8 +93,6 @@ const App = () => {
       />
       {current === "signin" ? (
         <Signin user={user} setUser={setUser} />
-      ) : current === "info" ? (
-        <Info />
       ) : current === "calendar" ? (
         <Calendar />
       ) : current === "roomInform" ? (
