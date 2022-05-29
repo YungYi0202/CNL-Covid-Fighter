@@ -50,27 +50,27 @@ const Footprint = () => {
         borderColor: "#bebebe"
       }}
       >
-      <Middle>
-        <InputNumber 
-          size="large"
-          min={1} max={31} 
-          addonBefore={"顯示"}
-          addonAfter={"天內資料"}
-          defaultValue={dayInterval} 
-          onChange={(val) => {setDayInterval(val);}} 
-        />
-      </Middle>
-      <Middle>
-        <InputNumber 
-          size="large"
-          min={0} max={dayInterval} 
-          addonBefore={"假定淺伏期為"}
-          addonAfter={"天"}
-          defaultValue={incubationPeriod} 
-          onChange={(val) => {setIncubationPeriod(val);}} 
-        />
-        <span style={{color: "#7e7e7e"}}>顯示確診者 確診前淺伏期 至 康復陰性日 的足跡</span>
-      </Middle>
+        <Middle>
+          <InputNumber 
+            size="large"
+            min={1} max={31} 
+            addonBefore={"顯示"}
+            addonAfter={"天內資料"}
+            defaultValue={dayInterval} 
+            onChange={(val) => {setDayInterval(val);}} 
+          />
+        </Middle>
+        <Middle>
+          <InputNumber 
+            size="large"
+            min={0} max={dayInterval} 
+            addonBefore={"假定淺伏期為"}
+            addonAfter={"天"}
+            defaultValue={incubationPeriod} 
+            onChange={(val) => {setIncubationPeriod(val);}} 
+          />
+          <span style={{color: "#7e7e7e"}}>顯示確診者 確診前淺伏期 至 康復陰性日 的足跡</span>
+        </Middle>
       </Card>
       <Divider></Divider>
       <Card>

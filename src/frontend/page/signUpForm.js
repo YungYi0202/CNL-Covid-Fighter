@@ -149,7 +149,7 @@ const SignUpForm = ({ onSignUpClick, setCurrent }) => {
       return;
     }
     let doses = [vaccine1, vaccine2, vaccine3];
-    doses.filter(dose => dose !== "" || dose !== "尚未接種");
+    doses.filter(dose => dose !== "" && dose !== "尚未接種");
 
     const res = await userExist(account);
     if (!res) {

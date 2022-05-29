@@ -30,7 +30,7 @@ const FootprintTable = ({ dateFootprints }) => {
         
         Object.keys(dateFootprints).length === 0?
         <>
-          <h2>目前無確診足跡</h2>
+          <h2>目前無足跡</h2>
         </>
         :
         Object.keys(dateFootprints).map((date, i) =>

@@ -7,7 +7,7 @@ const Contact = ({ user, setUser, back }) => {
   
   function handleDateChange(e) {
     if (e) {
-      message.info("Select " + e.format("YYYY/MM/DD"));
+      // message.info("Select " + e.format("YYYY/MM/DD"));
       setDate(e.format("YYYY/MM/DD"));
     } else {
       setDate("");

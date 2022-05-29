@@ -1,6 +1,6 @@
 import React from "react";
-import { Input, Button, Card, Select } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { Input, Button, Card, Select, Form, message } from "antd";
+import { UserOutlined} from "@ant-design/icons";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { updateUser } from "../../server/api";
 
@@ -89,13 +89,17 @@ const dormitories =
     }
   ];
 
-const dormitories_node = [];
+const dormitoriesNode = [];
 function add_dorm_option(dorm) {
-  dormitories_node.push(<Option value={dorm["key"]}>{dorm["label"]}</Option>);
+  dormitoriesNode.push(<Option value={dorm["key"]}>{dorm["label"]}</Option>);
 }
 dormitories.forEach(add_dorm_option);
 
 const vaccines = [
+  {
+    label: "尚未接種",
+    key: "尚未接種"
+  },
   {
     label: "AZ",
     key: "AZ"
@@ -114,9 +118,11 @@ const vaccines = [
   }
 ]
 
-const vaccines_node = [];
+const disabledSelector = <Select size="large" disabled></Select>;
+
+const vaccinesNode = [];
 function add_vaccine_option(vaccine) {
-  vaccines_node.push(<Option value={vaccine["key"]}>{vaccine["label"]}</Option>);
+  vaccinesNode.push(<Option value={vaccine["key"]}>{vaccine["label"]}</Option>);
 }
 vaccines.forEach(add_vaccine_option);
 
@@ -129,10 +135,55 @@ const Setting = ({ user, setUser }) => {
   const [vaccine1, setVaccine1] = React.useState(user.vaccine.doses[0] ?? "")
   const [vaccine2, setVaccine2] = React.useState(user.vaccine.doses[1] ?? "")
   const [vaccine3, setVaccine3] = React.useState(user.vaccine.doses[2] ?? "")
+  const [allowRoom, setAllowRoom] = React.useState(user.room===""?false: true);
+  const [allowVaccine2, setAllowVaccine2] = React.useState(vaccine2===""?false: true);
+  const [allowVaccine3, setAllowVaccine3] = React.useState(vaccine3===""?false: true);
 
+  React.useEffect(() => {
+    if (vaccine1 === "尚未接種" || vaccine1 === "") {
+      setAllowVaccine2(false);
+    } else {
+      setAllowVaccine2(true);
+    }
+  }, [vaccine1]);
+
+  React.useEffect(() => {
+    if (vaccine2 === "尚未接種" || vaccine2 === "") {
+      setAllowVaccine3(false);
+    } else {
+      setAllowVaccine3(true);
+    }
+  }, [vaccine2]);
+
+  React.useEffect(() => {
+    if (!allowVaccine2) {
+      setVaccine2("");
+    }
+  }, [allowVaccine2]);
+
+  React.useEffect(() => {
+    if (!allowVaccine3) {
+      setVaccine3("");
+    }
+  }, [allowVaccine3]);
+
+  React.useEffect(() => {
+    if (dormitory === "無" || dormitory === "") {
+      setAllowRoom(false);
+    } else {
+      setAllowRoom(true);
+    }
+  }, [dormitory]);
+
+  React.useEffect(() => {
+    if (!allowRoom) {
+      setRoom("");
+    }
+  }, [allowRoom]);
+  
   const handleUpdateClick = async () => {
     let doses = [vaccine1, vaccine2, vaccine3];
-    doses.filter(dose => dose !== "");
+    doses.filter(dose => dose !== "" && dose !== "尚未接種");
 
     const newUser = {
       ...user,
@@ -144,92 +195,89 @@ const Setting = ({ user, setUser }) => {
       vaccine: {"num_doses": doses.length, "doses": doses}
     };
     setUser(newUser);
-    await updateUser(newUser);
+    const [msg] = await updateUser(newUser);
+    message.info(msg);
   };
 
   return (
     <Card >
-      <Input
-        prefix={<UserOutlined />}
-        onChange={(e) => setUsername(e.target.value)}
-        defaultValue={username}
-        size="large"
-      />
-      <br />
-      <br />
-      <Input.Password
-        prefix={<UserOutlined />}
-        onChange={(e) => setPassword(e.target.value)}
-        defaultValue={password}
-        iconRender={(visible) =>
-          visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-        }
-        size="large"
-      />
-      <br />
-      <br />
-      <Input
-        prefix={<UserOutlined />}
-        onChange={(e) => setEmail(e.target.value)}
-        defaultValue={email}
-        size="large"
-      />
-      <br />
-      <br />
-      <Select
-        onChange={(value) => setDormitory(value)}
-        style={{ width: 1182 }}
-        size="large"
-        defaultValue={dormitory}
-      >
-        {dormitories_node}
-      </Select>
-      <br />
-      <br />
-      <Input
-        prefix={<UserOutlined />}
-        onChange={(e) => setRoom(e.target.value)}
-        defaultValue={room}
-        size="large"
-      />
-      <br />
-      <br />
-      <Select
-        onChange={(value) => setVaccine1(value)}
-        style={{ width: 1182 }}
-        size="large"
-        defaultValue={vaccine1}
-        placeholder="Enter your first dose"
-      >
-        {vaccines_node}
-      </Select>
-      <br />
-      <br />
-      <Select
-        onChange={(value) => setVaccine2(value)}
-        style={{ width: 1182 }}
-        size="large"
-        defaultValue={vaccine2}
-        placeholder="Enter your second dose"
-      >
-        {vaccines_node}
-      </Select>
-      <br />
-      <br />
-      <Select
-        onChange={(value) => setVaccine3(value)}
-        style={{ width: 1182 }}
-        size="large"
-        defaultValue={vaccine3}
-        placeholder="Enter your third dose"
-      >
-        {vaccines_node}
-      </Select>
-      <br />
-      <br />
+      <Form labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
+        <Form.Item label="使用者名稱">
+          <Input
+            onChange={(e) => setUsername(e.target.value)}
+            size="large"
+            defaultValue={username}
+          />
+        </Form.Item>
+        <Form.Item label="密碼">
+          <Input.Password
+            onChange={(e) => setPassword(e.target.value)}
+            iconRender={(visible) =>
+              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+            }
+            size="large"
+            defaultValue={password}
+          />
+        </Form.Item>
+        <Form.Item label="電子郵件">
+          <Input
+            onChange={(e) => setEmail(e.target.value)}
+            size="large"
+            defaultValue={email}
+          />
+        </Form.Item>
+        <Form.Item label="宿舍">
+          <Select
+            onChange={(value) => setDormitory(value)}
+            size="large"
+            defaultValue={dormitory}
+          >
+            {dormitoriesNode}
+          </Select>
+        </Form.Item>
+        <Form.Item label="寢室">
+          {
+          allowRoom?
+            <Input
+              onChange={(e) => setRoom(e.target.value)}
+              size="large" value={room}
+              defaultValue={room}
+            />
+          :
+            <Input size="large" disabled/>
+          }
+        </Form.Item>
+        <Form.Item label="第一劑">
+          <Select
+            onChange={(value) => setVaccine1(value)}
+            size="large" value={vaccine1}
+          >
+            {vaccinesNode}
+          </Select>
+        </Form.Item>
+        <Form.Item label="第二劑">
+          {allowVaccine2?
+          <Select
+            onChange={(value) => setVaccine2(value)}
+            size="large" value={vaccine2}
+          >
+            {vaccinesNode}
+          </Select>
+          : disabledSelector}
+        </Form.Item>
+        <Form.Item label="第三劑">
+          {allowVaccine3?
+          <Select
+            onChange={(value) => setVaccine3(value)}
+            size="large" value={vaccine3}
+          >
+            {vaccinesNode}
+          </Select>: disabledSelector}
+        </Form.Item>
+      </Form>
+    
       <Button block type="primary" onClick={handleUpdateClick}>
-        {" "}
-        update{" "}
+      更新
       </Button>
     </Card>
   );
