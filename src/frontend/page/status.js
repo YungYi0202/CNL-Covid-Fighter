@@ -3,6 +3,20 @@ import { Button } from "antd";
 import Report from "../page/report";
 import { updateUser } from "../../server/api";
 
+function formatDate(date) {
+  var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+  if (month.length < 2) 
+      month = '0' + month;
+  if (day.length < 2) 
+      day = '0' + day;
+
+  return [year, month, day].join('/');
+}
+
 const Status = ({ user, setUser, handleLogoutClick }) => {
   const [report, setReport] = React.useState(false);
   const [status, setStatus] = React.useState("健康");
@@ -19,7 +33,14 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
         } else if (diffDays <= 14) {
           setStatus("自主健康管理");
         } else {
-          const updatedUser = { ...user, confirmed: false, confirmed_date: "" };
+          const recover_date = new Date();
+          recover_date.setDate(confirmed_date.getDate() + 14);
+          const updatedUser = {
+            ...user,
+            confirmed: false,
+            confirmed_date: "",
+            recover_date: formatDate(recover_date)
+          };
           setUser(updatedUser);
           await updateUser(updatedUser);
           setStatus("健康");
