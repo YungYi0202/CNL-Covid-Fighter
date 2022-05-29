@@ -1,6 +1,14 @@
 import React from 'react';
-import { Card, Button, Radio } from "antd";
+import { Card, Button, Radio, Steps, Popover } from "antd";
 import { updateUser } from "../../server/api";
+
+const { Step } = Steps;
+
+const customDot = (dot, { status, index }) => (
+  <Popover>
+    {dot}
+  </Popover>
+);
 
 function formatDate(date) {
   var d = new Date(date),
@@ -18,9 +26,22 @@ function formatDate(date) {
 
 const AntigenTest = ({ user, setUser, back }) => {
   const [value, setValue] = React.useState("negative");
+  const [stepsNode, setStepsNode] = React.useState([]);
   const onChange = (e) => {
     setValue(e.target.value);
   };
+
+  React.useEffect(() => {
+    const tmp = [];
+    const today = new Date();
+    for (const [key, value] of Object.entries(user.antigen_test)) {
+      const diffDays = Math.ceil((today - new Date(key)) / (1000 * 60 * 60 * 24));
+      if (diffDays <= 31) {
+        tmp.push(<Step title={value} description={key} />);
+      }
+    }
+    setStepsNode(tmp);
+  }, [user]);
 
   const onSubmit = async () => {
     let updatedUser = {}
@@ -42,7 +63,7 @@ const AntigenTest = ({ user, setUser, back }) => {
       };
       setUser(updatedUser);
     } else {
-      updateUser = {...user};
+      updatedUser = { ...user };
     }
     updatedUser.antigen_test[today] = value;
     await updateUser(updatedUser);
@@ -64,6 +85,11 @@ const AntigenTest = ({ user, setUser, back }) => {
           {" "}submit{" "}
         </Button>
       </Card>
+      <br />
+      <br />
+      <Steps current={3} progressDot={customDot}>
+        {stepsNode}
+      </Steps>
       <br />
       <br />
       <Button onClick={back}> Back </Button>
