@@ -15,7 +15,7 @@ const items = [
   },
   {
     label: "確診者同住親友",
-    key: "is_contact"
+    key: "is_contacts"
   },
   {
     label: "確診者的密切接觸者的接觸者",
@@ -38,9 +38,16 @@ function formatDate(date) {
 }
 
 const Status = ({ user, setUser, handleLogoutClick }) => {
+  const defaultInformation = user.confirmed ? "confirmed" : (
+    user.entrant ? "entrant" : (
+      user.is_contacts ? "is_contacts" : (
+        user.contact_of_contacts ? "contact_of_contacts" : "confirmed"
+      )
+    )
+  );
   const [report, setReport] = React.useState(false);
   const [status, setStatus] = React.useState("健康");
-  const [information, setInformation] = React.useState("confirmed");
+  const [information, setInformation] = React.useState(defaultInformation);
   const [threeDoses, setThreeDoses] = React.useState(false);
   const [lessThanThreeDoses, setLessThanThreeDoses] = React.useState(false);
 
@@ -81,7 +88,7 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
           await updateUser(updatedUser);
           setStatus("健康");
         }
-      } else if (user.is_contact) {
+      } else if (user.is_contacts) {
         const contact_date = new Date(user.contact_date);
         const diffDays = Math.ceil((today - contact_date) / (1000 * 60 * 60 * 24));
         if (user.vaccine.num_doses < 3) {
@@ -90,7 +97,7 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
           } else if (diffDays <= 14) {
             setStatus("自主防疫");
           } else {
-            const updatedUser = { ...user, is_contact: false, contact_date: "" };
+            const updatedUser = { ...user, is_contacts: false, contact_date: "" };
             setUser(updatedUser);
             await updateUser(updatedUser);
             setStatus("健康");
@@ -99,7 +106,7 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
           if (diffDays <= 7) {
             setStatus("自主防疫");
           } else {
-            const updatedUser = { ...user, is_contact: false, contact_date: "" };
+            const updatedUser = { ...user, is_contacts: false, contact_date: "" };
             setUser(updatedUser);
             await updateUser(updatedUser);
             setStatus("健康");
@@ -121,6 +128,18 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
       }
     }
     renderStatus();
+  }, [user]);
+
+  React.useEffect(() => {
+    setInformation(
+      user.confirmed ? "confirmed" : (
+        user.entrant ? "entrant" : (
+          user.is_contacts ? "is_contacts" : (
+            user.contact_of_contacts ? "contact_of_contacts" : "confirmed"
+          )
+        )
+      )
+    );
   }, [user]);
 
   const handleReportClick = () => {
@@ -153,7 +172,7 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
           <Button onClick={handleReportClick}> 我要通報確診 / 密切接觸者 </Button>
           <br />
           <br />
-          <div style={{ display: "flex" }}>
+          <div style={{ display: "flex", height: "350px" }}>
             <Menu
               onClick={onClick}
               style={{ width: 256 }}
@@ -177,7 +196,7 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
                 <Timeline.Item>步驟三：居家檢疫第七天或出現症狀時快篩。</Timeline.Item>
                 <Timeline.Item>步驟四：自主健康管理七天。</Timeline.Item>
               </Timeline>
-            ) : information === "is_contact" ? (
+            ) : information === "is_contacts" ? (
               <div>
                 <Button onClick={handleThreeDoses} style={{ marginLeft: "20px" }}> 如果打滿三劑： </Button>
                 <br />

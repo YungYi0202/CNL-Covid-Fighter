@@ -16,7 +16,7 @@ const situations = [
   },
   {
     label: "確診者同住親友",
-    key: "is_contact"
+    key: "is_contacts"
   },
   {
     label: "確診者的密切接觸者的接觸者",
@@ -48,7 +48,7 @@ const Report = ({ user, setUser, back }) => {
         <br />
         {current_situation === "confirmed" ? (
           <Confirmed user={user} setUser={setUser} back={back} />
-        ) : current_situation === "is_contact" ? (
+        ) : current_situation === "is_contacts" ? (
           <Contact user={user} setUser={setUser} back={back} />
         ) : current_situation === "entrant" ? (
           <Entrant user={user} setUser={setUser} back={back} />
