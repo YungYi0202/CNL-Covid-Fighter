@@ -19,7 +19,7 @@ const Confirmed = ({ user, setUser, back }) => {
       message.error("請輸入日期");
     }
     else {
-      const updatedUser = { ...user, confirmed: true, confirmed_date: date };
+      const updatedUser = { ...user, confirmed: true, confirmed_date: date, recover_date: "" };
       setUser(updatedUser);
       const [msg] = await updateUser(updatedUser);
       back();
