@@ -44,7 +44,7 @@ const AntigenTest = ({ user, setUser, back }) => {
     } else {
       updateUser = {...user};
     }
-    updatedUser.antigen_test.push({"date": today, "result": value});
+    updatedUser.antigen_test[today] = value;
     await updateUser(updatedUser);
   };
 
