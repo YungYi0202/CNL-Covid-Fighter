@@ -19,7 +19,7 @@ const Confirmed = ({ user, setUser, back }) => {
       message.error("請輸入日期");
     }
     else {
-      const updatedUser = { ...user, confirmed: true, confirmed_date: date };
+      const updatedUser = { ...user, confirmed: true, confirmed_date: date, recover_date: "" };
       setUser(updatedUser);
       const [msg] = await updateUser(updatedUser);
       back();
@@ -36,16 +36,6 @@ const Confirmed = ({ user, setUser, back }) => {
       <Button onClick={handleSubmitClick} size="large" type="primary">
         {" "}submit{" "}
       </Button>
-      <br />
-      <br />
-      <a href="https://www.cdc.gov.tw/Category/MPage/9wonLmQrvAdSAx55Ec7aWw">
-        衛福部確診個案自主回報疫調系統
-      </a>
-      <br />
-      <br />
-      <a href="https://my.ntu.edu.tw/ntuwdc/ConfirmedReport.aspx">
-        臺大確診者通報
-      </a>
     </>
   );
 };

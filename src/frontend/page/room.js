@@ -3,6 +3,7 @@ import { getConfirmedRooms } from "../../server/api";
 import { Select, InputNumber, Table, Card, Divider } from 'antd';
 import styled from "styled-components";
 
+const Option = {Select};
 const Middle = styled.div`
   display: flex;
   justify-content: center; 
