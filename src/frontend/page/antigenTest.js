@@ -23,27 +23,29 @@ const AntigenTest = ({ user, setUser, back }) => {
   };
 
   const onSubmit = async () => {
+    let updatedUser = {}
+    const today = formatDate(new Date());
     if (value === "positive" && !user.confirmed) {
-      const today = new Date();
-      const updatedUser = {
+      updatedUser = {
         ...user,
         confirmed: true,
-        confirmed_date: formatDate(today),
+        confirmed_date: today,
         recover_date: ""
       };
       setUser(updatedUser);
-      await updateUser(updatedUser);
     } else if (value === "negative" && user.confirmed) {
-      const today = new Date();
-      const updatedUser = {
+      updatedUser = {
         ...user,
         confirmed: false,
         confirmed_date: "",
-        recover_date: formatDate(today)
+        recover_date: today
       };
       setUser(updatedUser);
-      await updateUser(updatedUser);
+    } else {
+      updateUser = {...user};
     }
+    updatedUser.antigen_test.push({"date": today, "result": value});
+    await updateUser(updatedUser);
   };
 
   return (

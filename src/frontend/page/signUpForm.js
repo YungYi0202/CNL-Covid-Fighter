@@ -175,6 +175,7 @@ const SignUpForm = ({ onSignUpClick, setCurrent }) => {
         "contact_date": "",
         "contact_of_contacts": false,
         "contact_contacts_date": "",
+        "antigen_test": [],
         "key": ""
       };
       const [msg] = await addUser(newUser);
