@@ -1,6 +1,7 @@
 import React from "react";
 import { Menu, Button, Typography, Timeline } from "antd";
 import Report from "../page/report";
+import AntigenTest from "../page/antigenTest";
 import { updateUser } from "../../server/api";
 
 const { Title, Paragraph, Text, Link } = Typography;
@@ -45,7 +46,7 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
       )
     )
   );
-  const [report, setReport] = React.useState(false);
+  const [report, setReport] = React.useState("default");
   const [status, setStatus] = React.useState("健康");
   const [information, setInformation] = React.useState(defaultInformation);
   const [threeDoses, setThreeDoses] = React.useState(false);
@@ -143,11 +144,11 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
   }, [user]);
 
   const handleReportClick = () => {
-    setReport(true);
+    setReport("report_identity");
   };
 
   const back = () => {
-    setReport(false);
+    setReport("default");
   };
 
   const onClick = e => {
@@ -165,11 +166,16 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
   return (
     <>
       <h1> 歡迎，{user.username}！你當前的狀態為： {status} </h1>
-      {report === true ? (
+      {report === "report_identity" ? (
         <Report user={user} setUser={setUser} back={back} />
+      ) : report === "antigen_test" ? (
+        <AntigenTest user={user} setUser={setUser} back={back}/>
       ) : (
         <>
-          <Button onClick={handleReportClick}> 我要通報確診 / 密切接觸者 </Button>
+          <Button onClick={handleReportClick}> 我是確診 / 密切接觸者 </Button>
+          <br />
+          <br />
+          <Button onClick={() => setReport("antigen_test")}> 我要紀錄快篩 </Button>
           <br />
           <br />
           <div style={{ display: "flex", height: "350px" }}>
