@@ -8,7 +8,7 @@ const myCalendar = ({ user }) => {
 
   let statuses = user.statuses;
   let tests = user.antigen_test;
-  let vaccine = user.vaccine.doses.length+1;
+  let vaccine = user.vaccine.doses.indexOf("尚未接種") + 1;
 
   let testKeys = Object.keys(tests).sort();
   testKeys = testKeys.map((x) => {
@@ -35,15 +35,11 @@ const myCalendar = ({ user }) => {
     ? endStatusDay
     : endTestDay;
 
-  // console.log(startDay, endDay);
-
   let behavior = new Array(endDay.diff(startDay, "d") + 14 + 1);
-  // console.log(behavior.length);
 
   testKeys.forEach((date, _) => {
     let index = date.diff(startDay, "d");
-    // console.log(index)
-    if (tests[date.format("YYYY-MM-DD")] === "positive") {
+    if (tests[date.format("YYYY/MM/DD")] === "positive") {
       if (behavior[index] === "居家照護" || behavior[index] === "自主健康管理")
         return;
 
@@ -51,10 +47,8 @@ const myCalendar = ({ user }) => {
       for (let i = 1; i <= 7 && flag; ++i) {
         let tmpDay = moment(startDay.valueOf());
         tmpDay.add(index + i, "d");
-        // console.log(index+i, tmpDay.format("YYYY-MM-DD"));
-        // console.log(statuses[tmpDay.format("YYYY-MM-DD")]);
 
-        if (statuses[tmpDay.format("YYYY-MM-DD")] === "健康") {
+        if (statuses[tmpDay.format("YYYY/MM/DD")] === "健康") {
           flag = false;
           break;
         }
@@ -64,21 +58,16 @@ const myCalendar = ({ user }) => {
       for (let i = 8; i <= 14; ++i) {
         let tmpDay = moment(startDay.valueOf());
         tmpDay.add(index + i, "d");
-        // console.log(index+i, tmpDay.format("YYYY-MM-DD"));
-        // console.log(statuses[tmpDay.format("YYYY-MM-DD")]);
 
-        if (statuses[tmpDay.format("YYYY-MM-DD")] === "健康") break;
+        if (statuses[tmpDay.format("YYYY/MM/DD")] === "健康") break;
         behavior[index + i] = "自主健康管理";
       }
     }
   });
 
-  // console.log(behavior);
-
   statusKeys.forEach((date, _) => {
     let index = date.diff(startDay, "d");
-    // console.log(index)
-    if (statuses[date.format("YYYY-MM-DD")] === "入境者") {
+    if (statuses[date.format("YYYY/MM/DD")] === "入境者") {
       for (let i = 1; i <= 6; ++i) {
         if (!behavior.hasOwnProperty(index + i))
           behavior[index + i] = "居家檢疫";
@@ -94,12 +83,10 @@ const myCalendar = ({ user }) => {
     }
   });
 
-  // console.log(behavior);
-
   statusKeys.forEach((date, _) => {
     let index = date.diff(startDay, "d");
     console.log(index);
-    if (statuses[date.format("YYYY-MM-DD")] === "確診者同住親友、同寢室") {
+    if (statuses[date.format("YYYY/MM/DD")] === "確診者同住親友、同寢室") {
       console.log(vaccine.num_doses);
       if (vaccine.num_doses !== 3) {
         for (let i = 1; i <= 1; ++i) {
@@ -123,12 +110,9 @@ const myCalendar = ({ user }) => {
     }
   });
 
-  // console.log(behavior);
-
   statusKeys.forEach((date, _) => {
     let index = date.diff(startDay, "d");
-    // console.log(index)
-    if (statuses[date.format("YYYY-MM-DD")] === "確診者的密切接觸者的接觸者") {
+    if (statuses[date.format("YYYY/MM/DD")] === "確診者的密切接觸者的接觸者") {
       for (let i = 1; i <= 7; ++i) {
         if (!behavior.hasOwnProperty(index + i))
           behavior[index + i] = "自主防疫";
@@ -140,10 +124,8 @@ const myCalendar = ({ user }) => {
 
   function getDateData(value) {
     let listData = [];
-    // console.log(value);
-    let date = value.format("YYYY-MM-DD");
+    let date = value.format("YYYY/MM/DD");
     if (statuses.hasOwnProperty(date)) {
-      // console.log(statuses[date]);
       switch (statuses[date]) {
         case "健康":
         case "快篩陽性":
@@ -167,10 +149,7 @@ const myCalendar = ({ user }) => {
     if (index >= 0 && index < behavior.length) {
       if (behavior.hasOwnProperty(index)) {
         if (behavior[index][0] === "*") {
-          // special case
-          const messages = behavior[index].split("*");
-          console.log(messages[1]);
-          console.log(messages[2]);
+          let messages = behavior[index].split("*");
           listData.unshift({ type: "warning", content: messages[2] });
           listData.push({ type: "success", content: messages[1] });
         } else {
