@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Button, Radio, Steps, Popover } from "antd";
+import { Card, Button, Radio, Steps, Popover, DatePicker, message } from "antd";
 import { updateUser } from "../../server/api";
 
 const { Step } = Steps;
@@ -27,46 +27,86 @@ function formatDate(date) {
 const AntigenTest = ({ user, setUser, back }) => {
   const [value, setValue] = React.useState("negative");
   const [stepsNode, setStepsNode] = React.useState([]);
+  const [date, setDate] = React.useState("");
+
+  function handleDateChange(e) {
+    if (e) {
+      setDate(e.format("YYYY/MM/DD"));
+    } else {
+      setDate("");
+    }
+  }
+
   const onChange = (e) => {
     setValue(e.target.value);
   };
 
   React.useEffect(() => {
+    const orderedDate = Object.keys(user.antigen_test).sort(function (a, b) {
+      a = a.split('/').join('');
+      b = b.split('/').join('');
+      return a > b ? 1 : a < b ? -1 : 0;
+    });
     const tmp = [];
     const today = new Date();
-    for (const [key, value] of Object.entries(user.antigen_test)) {
-      const diffDays = Math.ceil((today - new Date(key)) / (1000 * 60 * 60 * 24));
+    orderedDate.forEach((e) => {
+      const diffDays = Math.ceil((today - new Date(e)) / (1000 * 60 * 60 * 24));
       if (diffDays <= 31) {
-        tmp.push(<Step title={value} description={key} />);
+        tmp.push(<Step title={user.antigen_test[e]} description={e} />);
       }
-    }
+    });
     setStepsNode(tmp);
   }, [user]);
 
   const onSubmit = async () => {
-    let updatedUser = {}
-    const today = formatDate(new Date());
-    if (value === "positive" && !user.confirmed) {
-      updatedUser = {
-        ...user,
-        confirmed: true,
-        confirmed_date: today,
-        recover_date: ""
-      };
-      setUser(updatedUser);
-    } else if (value === "negative" && user.confirmed) {
-      updatedUser = {
-        ...user,
-        confirmed: false,
-        confirmed_date: "",
-        recover_date: today
-      };
-      setUser(updatedUser);
+    if (date === "") {
+      message.error("請輸入日期");
     } else {
-      updatedUser = { ...user };
+      let updatedUser = { ...user };
+      updatedUser.antigen_test[date] = value;
+      const orderedDate = Object.keys(updatedUser.antigen_test).sort(function (a, b) {
+        a = a.split('/').join('');
+        b = b.split('/').join('');
+        return a > b ? -1 : a < b ? 1 : 0;
+      });
+      let latest = orderedDate.findIndex((e) => updatedUser.antigen_test[e] === "positive");
+      const today = new Date();
+      if (user.confirmed) {
+        if (latest === -1) {
+          updatedUser = {
+            ...user,
+            confirmed: false,
+            confirmed_date: "",
+            recover_date: ""
+          };
+        } else {
+          latest = new Date(orderedDate[latest]);
+          const diffDays = Math.ceil((today - latest) / (1000 * 60 * 60 * 24)) > 14;
+          if (diffDays > 14) {
+            const recover_date = new Date();
+            recover_date.setDate(latest.getDate() + 14);
+            updatedUser = {
+              ...user,
+              confirmed: false,
+              confirmed_date: "",
+              recover_date: formatDate(recover_date)
+            };
+          }
+        }
+      } else {
+        latest = new Date(orderedDate[latest]);
+        if (Math.ceil((today - latest) / (1000 * 60 * 60 * 24)) <= 14) {
+          updatedUser = {
+            ...user,
+            confirmed: true,
+            confirmed_date: formatDate(latest),
+            recover_date: ""
+          };
+        }
+      }
+      setUser(updatedUser);
+      await updateUser(updatedUser);
     }
-    updatedUser.antigen_test[today] = value;
-    await updateUser(updatedUser);
   };
 
   return (
@@ -76,7 +116,8 @@ const AntigenTest = ({ user, setUser, back }) => {
         background: "#f0f0f0",
         borderColor: "#bebebe"
       }}>
-        <h>今天快篩：</h>
+        <label>快篩結果：</label>
+        <DatePicker onChange={handleDateChange} allowClear={false} style={{ marginLeft: "10px", marginRight: "10px" }} />
         <Radio.Group onChange={onChange} value={value}>
           <Radio value={"positive"}>陽性</Radio>
           <Radio value={"negative"}>陰性</Radio>
@@ -87,7 +128,7 @@ const AntigenTest = ({ user, setUser, back }) => {
       </Card>
       <br />
       <br />
-      <Steps current={3} progressDot={customDot}>
+      <Steps current={40} progressDot={customDot}>
         {stepsNode}
       </Steps>
       <br />

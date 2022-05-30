@@ -20,6 +20,7 @@ const Confirmed = ({ user, setUser, back }) => {
     }
     else {
       const updatedUser = { ...user, confirmed: true, confirmed_date: date, recover_date: "" };
+      updatedUser.antigen_test[date] = "positive";
       setUser(updatedUser);
       const [msg2] = await sendEmailToContacts(updatedUser);
       const [msg] = await updateUser(updatedUser);
@@ -30,7 +31,7 @@ const Confirmed = ({ user, setUser, back }) => {
 
   return (
     <>
-      <label> PCR / 快篩陽性日期: </label>
+      <label> 確診日期: </label>
       <DatePicker onChange={handleDateChange} allowClear={false} />
       <br />
       <br />
