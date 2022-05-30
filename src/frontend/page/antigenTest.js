@@ -1,6 +1,7 @@
 import React from 'react';
-import { Card, Button, Radio, Steps, Popover, DatePicker, message } from "antd";
+import { Card, Button, Radio, Steps, Popover, DatePicker, message, Tooltip } from "antd";
 import { updateUser } from "../../server/api";
+import { DeleteOutlined } from '@ant-design/icons';
 
 const { Step } = Steps;
 
@@ -41,6 +42,57 @@ const AntigenTest = ({ user, setUser, back }) => {
     setValue(e.target.value);
   };
 
+  const updateUserStatus = async (updatedUser) => {
+    const orderedDate = Object.keys(updatedUser.antigen_test).sort(function (a, b) {
+      a = a.split('/').join('');
+      b = b.split('/').join('');
+      return a > b ? -1 : a < b ? 1 : 0;
+    });
+    let latest = orderedDate.findIndex((e) => updatedUser.antigen_test[e] === "positive");
+    const today = new Date();
+    if (user.confirmed) {
+      if (latest === -1) {
+        updatedUser = {
+          ...user,
+          confirmed: false,
+          confirmed_date: "",
+          recover_date: ""
+        };
+      } else {
+        latest = new Date(orderedDate[latest]);
+        const diffDays = Math.ceil((today - latest) / (1000 * 60 * 60 * 24)) > 14;
+        if (diffDays > 14) {
+          const recover_date = new Date();
+          recover_date.setDate(latest.getDate() + 14);
+          updatedUser = {
+            ...user,
+            confirmed: false,
+            confirmed_date: "",
+            recover_date: formatDate(recover_date)
+          };
+        }
+      }
+    } else {
+      latest = new Date(orderedDate[latest]);
+      if (Math.ceil((today - latest) / (1000 * 60 * 60 * 24)) <= 14) {
+        updatedUser = {
+          ...user,
+          confirmed: true,
+          confirmed_date: formatDate(latest),
+          recover_date: ""
+        };
+      }
+    }
+    setUser(updatedUser);
+    await updateUser(updatedUser);
+  }
+
+  const onDeleteClick = async (e) => {
+    const updatedUser = { ...user };
+    delete updatedUser.antigen_test[e];
+    await updateUserStatus(updatedUser);
+  };
+
   React.useEffect(() => {
     const orderedDate = Object.keys(user.antigen_test).sort(function (a, b) {
       a = a.split('/').join('');
@@ -52,7 +104,16 @@ const AntigenTest = ({ user, setUser, back }) => {
     orderedDate.forEach((e) => {
       const diffDays = Math.ceil((today - new Date(e)) / (1000 * 60 * 60 * 24));
       if (diffDays <= 31) {
-        tmp.push(<Step title={user.antigen_test[e]} description={e} />);
+        tmp.push(<Step
+          title={user.antigen_test[e]}
+          description={(
+            <>
+              <label>{e}</label>
+              <br />
+              <Button shape="circle" icon={<DeleteOutlined />} onClick={() => onDeleteClick(e)} />
+            </>
+          )}
+        />);
       }
     });
     setStepsNode(tmp);
@@ -64,48 +125,7 @@ const AntigenTest = ({ user, setUser, back }) => {
     } else {
       let updatedUser = { ...user };
       updatedUser.antigen_test[date] = value;
-      const orderedDate = Object.keys(updatedUser.antigen_test).sort(function (a, b) {
-        a = a.split('/').join('');
-        b = b.split('/').join('');
-        return a > b ? -1 : a < b ? 1 : 0;
-      });
-      let latest = orderedDate.findIndex((e) => updatedUser.antigen_test[e] === "positive");
-      const today = new Date();
-      if (user.confirmed) {
-        if (latest === -1) {
-          updatedUser = {
-            ...user,
-            confirmed: false,
-            confirmed_date: "",
-            recover_date: ""
-          };
-        } else {
-          latest = new Date(orderedDate[latest]);
-          const diffDays = Math.ceil((today - latest) / (1000 * 60 * 60 * 24)) > 14;
-          if (diffDays > 14) {
-            const recover_date = new Date();
-            recover_date.setDate(latest.getDate() + 14);
-            updatedUser = {
-              ...user,
-              confirmed: false,
-              confirmed_date: "",
-              recover_date: formatDate(recover_date)
-            };
-          }
-        }
-      } else {
-        latest = new Date(orderedDate[latest]);
-        if (Math.ceil((today - latest) / (1000 * 60 * 60 * 24)) <= 14) {
-          updatedUser = {
-            ...user,
-            confirmed: true,
-            confirmed_date: formatDate(latest),
-            recover_date: ""
-          };
-        }
-      }
-      setUser(updatedUser);
-      await updateUser(updatedUser);
+      await updateUserStatus(updatedUser);
     }
   };
 
