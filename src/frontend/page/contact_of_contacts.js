@@ -19,7 +19,9 @@ const ContactOfContacts = ({ user, setUser, back }) => {
       message.error("請輸入日期");
     }
     else {
-      const updatedUser = { ...user, contact_of_contacts: true, contact_contacts_date: date };
+      let statuses_tmp = { ...user.statuses };
+      statuses_tmp[date] = "確診者的密切接觸者的接觸者";
+      const updatedUser = { ...user, contact_of_contacts: true, contact_contacts_date: date, statuses: statuses_tmp };
       setUser(updatedUser);
       const [msg] = await updateUser(updatedUser);
       back();

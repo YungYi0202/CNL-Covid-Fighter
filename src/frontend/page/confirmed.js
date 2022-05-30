@@ -19,7 +19,9 @@ const Confirmed = ({ user, setUser, back }) => {
       message.error("請輸入日期");
     }
     else {
-      const updatedUser = { ...user, confirmed: true, confirmed_date: date, recover_date: "" };
+      let statuses_tmp = { ...user.statuses };
+      statuses_tmp[date] = "快篩陽性";
+      const updatedUser = { ...user, confirmed: true, confirmed_date: date, recover_date: "", statuses: statuses_tmp };
       updatedUser.antigen_test[date] = "positive";
       setUser(updatedUser);
       await sendEmailToContacts(updatedUser);
