@@ -15,14 +15,15 @@
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "antd": "^4.20.5",
-    "styled-components": "^5.3.5",
     "axios": "^0.21.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "nodemailer": "^6.7.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "4.0.0"
+    "react-scripts": "5.0.0",
+    "styled-components": "^5.3.5"
   },
   "eslintConfig": {
     "extends": [
