@@ -1,6 +1,6 @@
 import React from "react";
 import { DatePicker, message, Button, Upload } from "antd";
-import { updateUser, addConfirmedRooms } from "../../server/api";
+import { updateUser, addConfirmedRooms, sendEmailToContacts } from "../../server/api";
 
 const Confirmed = ({ user, setUser, back }) => {
   const [date, setDate] = React.useState("");
@@ -21,6 +21,7 @@ const Confirmed = ({ user, setUser, back }) => {
     else {
       const updatedUser = { ...user, confirmed: true, confirmed_date: date, recover_date: "" };
       setUser(updatedUser);
+      const [msg2] = await sendEmailToContacts(updatedUser);
       const [msg] = await updateUser(updatedUser);
       back();
       addConfirmedRooms({"dormitory": user.dormitory, "room": user.room, "date": date, "userKey": user.key, "recoverNegative": false});

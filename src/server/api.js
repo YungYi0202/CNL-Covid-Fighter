@@ -168,6 +168,14 @@ const userExist = async (account) => {
   else return false;
 }
 
+const sendEmailToContacts = async (contactedUser) => {
+  const {
+    data: { message }
+  } = await instance.post('/sendEmail', { contactedUser });
+  console.log("send email", message);
+  return message;
+}
+
 export {
   getUsers,
   getStores,
@@ -183,5 +191,6 @@ export {
   getLocationOptions,
   checkUser,
   userExist,
-  addUser
+  addUser, 
+  sendEmailToContacts
 };
