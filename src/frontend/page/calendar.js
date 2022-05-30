@@ -4,11 +4,9 @@ import { Calendar, Badge } from "antd";
 var moment = require("moment");
 
 const myCalendar = ({ user }) => {
-  console.log(user);
-
   let statuses = user.statuses;
   let tests = user.antigen_test;
-  let vaccine = user.vaccine.doses.indexOf("尚未接種") + 1;
+  let num_doses = user.vaccine.doses.indexOf("尚未接種") + 1;
 
   let testKeys = Object.keys(tests).sort();
   testKeys = testKeys.map((x) => {
@@ -85,10 +83,9 @@ const myCalendar = ({ user }) => {
 
   statusKeys.forEach((date, _) => {
     let index = date.diff(startDay, "d");
-    console.log(index);
     if (statuses[date.format("YYYY/MM/DD")] === "確診者同住親友、同寢室") {
-      console.log(vaccine.num_doses);
-      if (vaccine.num_doses !== 3) {
+      console.log(num_doses);
+      if (num_doses !== 3) {
         for (let i = 1; i <= 1; ++i) {
           if (!behavior.hasOwnProperty(index + i))
             behavior[index + i] = "*居家隔離*請於三日內快篩";
@@ -120,7 +117,14 @@ const myCalendar = ({ user }) => {
     }
   });
 
-  console.log(behavior);
+  // console.log(behavior);
+
+  let behavior2color = {
+    "居家檢疫": "pink",
+    "自主健康管理": "cyan",
+    "居家隔離": "geekblue",
+    "居家照護": "orange"
+  }
 
   function getDateData(value) {
     let listData = [];
@@ -128,17 +132,19 @@ const myCalendar = ({ user }) => {
     if (statuses.hasOwnProperty(date)) {
       switch (statuses[date]) {
         case "健康":
+          listData.push({ color: "green", content: "健康" });
+          break;
         case "快篩陽性":
-          listData.push({ type: "success", content: statuses[date] });
+          listData.push({ color: "red", content: "快篩陽性" });
           break;
         case "入境者":
-          listData.push({ type: "success", content: "入境" });
+          listData.push({ color: "blue", content: "入境" });
           break;
         case "確診者同住親友、同寢室":
-          listData.push({ type: "success", content: "同住人確診" });
+          listData.push({ color: "gray", content: "同住人確診" });
           break;
         case "確診者的密切接觸者的接觸者":
-          listData.push({ type: "success", content: "他人確診" });
+          listData.push({ color: "purple", content: "他人確診" });
           break;
         default:
           break;
@@ -150,10 +156,10 @@ const myCalendar = ({ user }) => {
       if (behavior.hasOwnProperty(index)) {
         if (behavior[index][0] === "*") {
           let messages = behavior[index].split("*");
-          listData.unshift({ type: "warning", content: messages[2] });
-          listData.push({ type: "success", content: messages[1] });
+          listData.unshift({ color: "yellow", content: messages[2] });
+          listData.push({ color: behavior2color[messages[1]], content: messages[1] });
         } else {
-          listData.push({ type: "success", content: behavior[index] });
+          listData.push({ color: behavior2color[behavior[index]], content: behavior[index] });
         }
       }
     }
@@ -166,7 +172,7 @@ const myCalendar = ({ user }) => {
     return listData.map((item) => (
       <Badge
         style={{ display: "block" }}
-        status={item.type}
+        color={item.color}
         text={item.content}
       />
     ));
