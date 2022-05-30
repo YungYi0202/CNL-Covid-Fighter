@@ -91,7 +91,7 @@ const App = () => {
       {current === "signin" ? (
         <Signin user={user} setUser={setUser} />
       ) : current === "calendar" ? (
-        <Calendar />
+        <Calendar user={user} />
       ) : current === "footprintInform" ? (
         <FootprintInform user={user}/>
       ) : current === "people" ? (
