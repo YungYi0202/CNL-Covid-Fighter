@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Button, Radio, Steps, Popover, DatePicker, message, Tooltip, Modal } from "antd";
+import { Radio, Steps, Popover, DatePicker, message, Tooltip, Modal } from "antd";
 import { updateUser } from "../../server/api";
 import { DeleteOutlined } from '@ant-design/icons';
 
@@ -93,32 +93,6 @@ const AntigenTest = ({ user, setUser, back }) => {
     await updateUserStatus(updatedUser);
   };
 
-  // React.useEffect(() => {
-  //   const orderedDate = Object.keys(user.antigen_test).sort(function (a, b) {
-  //     a = a.split('/').join('');
-  //     b = b.split('/').join('');
-  //     return a > b ? 1 : a < b ? -1 : 0;
-  //   });
-  //   const tmp = [];
-  //   const today = new Date();
-  //   orderedDate.forEach((e) => {
-  //     const diffDays = Math.ceil((today - new Date(e)) / (1000 * 60 * 60 * 24));
-  //     if (diffDays <= 31) {
-  //       tmp.push(<Step
-  //         title={user.antigen_test[e]}
-  //         description={(
-  //           <>
-  //             <label>{e}</label>
-  //             <br />
-  //             <Button shape="circle" icon={<DeleteOutlined />} onClick={() => onDeleteClick(e)} />
-  //           </>
-  //         )}
-  //       />);
-  //     }
-  //   });
-  //   setStepsNode(tmp);
-  // }, [user]);
-
   const onSubmit = async () => {
     if (date === "") {
       message.error("請輸入日期");
@@ -132,26 +106,12 @@ const AntigenTest = ({ user, setUser, back }) => {
   return (
     <>
       <Modal title="登記快篩資訊" visible={true} onCancel={back} onOk={onSubmit} okText="登記" cancelText="取消">
-      <Card style={{
-        marginTop: "20px",
-        background: "#f0f0f0",
-        borderColor: "#bebebe"
-      }}>
         <label>快篩結果：</label>
         <DatePicker onChange={handleDateChange} allowClear={false} style={{ marginLeft: "10px", marginRight: "10px" }} />
         <Radio.Group onChange={onChange} value={value}>
           <Radio value={"positive"}>陽性</Radio>
           <Radio value={"negative"}>陰性</Radio>
         </Radio.Group>
-        {/* <Button onClick={onSubmit}>
-          {" "}submit{" "}
-        </Button> */}
-      </Card>
-      <br />
-      <br />
-      {/* <Steps current={40} progressDot={customDot}>
-        {stepsNode}
-      </Steps> */}
       </Modal>
     </>
   );

@@ -60,6 +60,56 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
   const [status, setStatus] = React.useState("健康");
 
   const [stepsNode, setStepsNode] = React.useState([]);
+  const updateUserStatus = async (updatedUser) => {
+    const orderedDate = Object.keys(updatedUser.antigen_test).sort(function (a, b) {
+      a = a.split('/').join('');
+      b = b.split('/').join('');
+      return a > b ? -1 : a < b ? 1 : 0;
+    });
+    let latest = orderedDate.findIndex((e) => updatedUser.antigen_test[e] === "positive");
+    const today = new Date();
+    if (user.confirmed) {
+      if (latest === -1) {
+        updatedUser = {
+          ...user,
+          confirmed: false,
+          confirmed_date: "",
+          recover_date: ""
+        };
+      } else {
+        latest = new Date(orderedDate[latest]);
+        const diffDays = Math.ceil((today - latest) / (1000 * 60 * 60 * 24)) > 14;
+        if (diffDays > 14) {
+          const recover_date = new Date();
+          recover_date.setDate(latest.getDate() + 14);
+          updatedUser = {
+            ...user,
+            confirmed: false,
+            confirmed_date: "",
+            recover_date: formatDate(recover_date)
+          };
+        }
+      }
+    } else {
+      latest = new Date(orderedDate[latest]);
+      if (Math.ceil((today - latest) / (1000 * 60 * 60 * 24)) <= 14) {
+        updatedUser = {
+          ...user,
+          confirmed: true,
+          confirmed_date: formatDate(latest),
+          recover_date: ""
+        };
+      }
+    }
+    setUser(updatedUser);
+    await updateUser(updatedUser);
+  }
+
+  const onDeleteClick = async (e) => {
+    const updatedUser = { ...user };
+    delete updatedUser.antigen_test[e];
+    await updateUserStatus(updatedUser);
+  };
 
   React.useEffect(() => {
     const orderedDate = Object.keys(user.antigen_test).sort(function (a, b) {
@@ -180,7 +230,7 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
         extra={[
           <Button onClick={() => setReport("report_identity")}> 我是確診 / 密切接觸者 </Button>,
           <Button onClick={() => setReport("antigen_test")}> 我要紀錄快篩 </Button>,
-          <Button onClick={handleLogoutClick}>登出</Button>
+          <Button onClick={handleLogoutClick} type="primary">登出</Button>
         ]}
       >
         <div style={{ display: "flex"}}>
