@@ -58,7 +58,6 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
       if (user.confirmed) {
         const confirmed_date = new Date(user.confirmed_date);
         const diffDays = Math.ceil((today - confirmed_date) / (1000 * 60 * 60 * 24));
-        console.log(diffDays);
         if (diffDays <= 7) {
           setStatus("居家照護");
         } else if (diffDays <= 14) {

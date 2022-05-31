@@ -1,6 +1,6 @@
 import React from "react";
 import { DatePicker, message, Button, Upload } from "antd";
-import { updateUser, addConfirmedRooms, sendEmailToContacts } from "../../server/api";
+import { updateUser, addConfirmedRooms, sendEmailToContacts, updateContactsAfterConfirmed } from "../../server/api";
 
 const Confirmed = ({ user, setUser, back }) => {
   const [date, setDate] = React.useState("");
@@ -19,9 +19,13 @@ const Confirmed = ({ user, setUser, back }) => {
       message.error("請輸入日期");
     }
     else {
-      const updatedUser = { ...user, confirmed: true, confirmed_date: date, recover_date: "" };
+      let statuses_tmp = { ...user.statuses };
+      statuses_tmp[date] = "快篩陽性";
+      const updatedUser = { ...user, confirmed: true, confirmed_date: date, recover_date: "", statuses: statuses_tmp };
+      updatedUser.antigen_test[date] = "positive";
       setUser(updatedUser);
-      const [msg2] = await sendEmailToContacts(updatedUser);
+      await sendEmailToContacts(updatedUser);
+      await updateContactsAfterConfirmed(updatedUser);
       const [msg] = await updateUser(updatedUser);
       back();
       const [msg3] = await addConfirmedRooms({"dormitory": user.dormitory, "room": user.room, "date": date, "userKey": user.key, "recoverNegative": false});
@@ -30,7 +34,7 @@ const Confirmed = ({ user, setUser, back }) => {
 
   return (
     <>
-      <label> PCR / 快篩陽性日期: </label>
+      <label> 確診日期: </label>
       <DatePicker onChange={handleDateChange} allowClear={false} />
       <br />
       <br />

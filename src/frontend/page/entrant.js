@@ -19,7 +19,9 @@ const Entrant = ({ user, setUser, back }) => {
       message.error("請輸入日期");
     }
     else {
-      const updatedUser = { ...user, entrant: true, entry_date: date };
+      let statuses_tmp = { ...user.statuses };
+      statuses_tmp[date] = "入境者";
+      const updatedUser = { ...user, entrant: true, entry_date: date, statuses: statuses_tmp };
       setUser(updatedUser);
       const [msg] = await updateUser(updatedUser);
       back();
