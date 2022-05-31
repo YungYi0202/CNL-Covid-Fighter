@@ -124,17 +124,70 @@ const updateUser = async (user) => {
   return [message];
 };
 
+const checkConfirmerRooms = async (dormitory, userKey, date) => {
+  const confirmedRooms = await getConfirmedRooms();
+  for (let i = 0; i < confirmedRooms[dormitory]; i++) {
+    const roomData = confirmedRooms[dormitory][i];
+    if (roomData.userKey === userKey && roomData.date === date) {
+      return [confirmedRooms, i];
+    }
+  }
+  return [confirmedRooms, -1];
+}
+
 /**
  * 
- * @param {Object} info {"dormitory": ..., "room": ..., "date": ...} 
+ * @param {Object} info {"dormitory": ..., "room": ..., "date": ..., "userKey": ... , "recover": ...} 
  */
 const addConfirmedRooms = async (info) => {
-  const confirmedRooms = await getConfirmedRooms();
-  confirmedRooms[info.dormitory].push({"room": info.room, "date": info.date});
-  const {
-    data: { message }
-  } = await instance.post('/updateConfirmedRooms', { confirmedRooms });
-  return message;
+  if (info.dormitory === "無") return "";
+  const [confirmedRooms, found] = checkConfirmerRooms(info.dormitory, info.userKey, info.date);
+  if (found === -1) {
+    delete info.dormitory
+    confirmedRooms[dorm].push(info);
+    const {
+      data: { message }
+    } = await instance.post('/updateConfirmedRooms', { confirmedRooms });
+    return message;
+  } else {
+    return "此筆確診住宿資料已存在";
+  }
+}
+
+/**
+ * 
+ * @param {Object} info {"dormitory": ..., "date": ..., "userKey"...} 
+ */
+const removeConfirmedRooms = async (info) => {
+  if (info.dormitory === "無") return "";
+  const [confirmedRooms, found] = checkConfirmerRooms(info.dormitory, info.userKey, info.date);
+  if (found === -1) {
+    return "欲移除的該筆確診住宿資料不存在";
+  } else {
+    confirmedRooms[info.dormitory].splice(found, 1);
+    const {
+      data: { message }
+    } = await instance.post('/updateConfirmedRooms', { confirmedRooms });
+    return message;
+  }
+}
+
+/**
+ * 
+ * @param {Object} info {"dormitory": ..., "date": ..., "userKey"...} 
+ */
+const recoverConfirmedRooms = async (info) => {
+  if (info.dormitory === "無") return "";
+  const [confirmedRooms, found] = checkConfirmerRooms(info.dormitory, info.userKey, info.date);
+  if (found === -1) {
+    return "欲設定康復的該筆確診住宿資料不存在";
+  } else {
+    confirmedRooms[info.dormitory][i].recoverNegative = true;
+    const {
+      data: { message }
+    } = await instance.post('/updateConfirmedRooms', { confirmedRooms });
+    return message;
+  }
 }
 
 const addFootprint = async (newFootprint) => {
@@ -192,6 +245,8 @@ export {
   getTelephones,
   updateUser,
   addConfirmedRooms,
+  removeConfirmedRooms,
+  recoverConfirmedRooms,
   addFootprint,
   getEverConfirmedUsers,
   getLocationOptions,
@@ -199,5 +254,5 @@ export {
   userExist,
   addUser, 
   sendEmailToContacts, 
-  updateContactsAfterConfirmed
+  updateContactsAfterConfirmed,
 };

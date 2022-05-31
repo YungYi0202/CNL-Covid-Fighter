@@ -2,9 +2,9 @@ import React from "react";
 import { Button, Typography, PageHeader, Divider, Steps, Popover } from "antd";
 import Report from "../page/report";
 import AntigenTest from "../page/antigenTest";
-import { updateUser } from "../../server/api";
 import {ConfirmedInstuct, EntrantInstuct, IsContactsInstuct ,ContactOfContactsInstuct} from "./instruction"
 import { DeleteOutlined } from '@ant-design/icons';
+import { updateUser, addConfirmedRooms, removeConfirmedRooms, recoverConfirmedRooms } from "../../server/api";
 
 const { Step } = Steps;
 const { Title, Paragraph, Text, Link } = Typography;
@@ -70,6 +70,8 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
     const today = new Date();
     if (user.confirmed) {
       if (latest === -1) {
+        /* It means that the confirmed news is wrong.*/
+        const msg = await removeConfirmedRooms({"dormitory": user.dormitory , "date": user.confirmed_date, "userKey": user.key});
         updatedUser = {
           ...user,
           confirmed: false,
@@ -80,6 +82,7 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
         latest = new Date(orderedDate[latest]);
         const diffDays = Math.ceil((today - latest) / (1000 * 60 * 60 * 24)) > 14;
         if (diffDays > 14) {
+          const msg = await recoverConfirmedRooms({"dormitory": user.dormitory , "date": user.confirmed_date, "userKey": user.key});
           const recover_date = new Date();
           recover_date.setDate(latest.getDate() + 14);
           updatedUser = {
@@ -99,6 +102,7 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
           confirmed_date: formatDate(latest),
           recover_date: ""
         };
+        const msg = await addConfirmedRooms({"dormitory": user.dormitory, "room": user.room, "date": formatDate(latest), "userKey": user.key, "recoverNegative": false});
       }
     }
     setUser(updatedUser);
@@ -269,25 +273,14 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
       }
 
       <br></br>
-      <br></br>
-      {/* <Modal title="Basic Modal" visible={report!=="default"} onCancel={back}> */}
-        {report === "report_identity" ? (
-          <Report user={user} setUser={setUser} back={back} />
-        ) : report === "antigen_test" ? (
-          <AntigenTest user={user} setUser={setUser} back={back}/>
-        ) : 
-          <></>
-        }
-      {/* </Modal> */}
-      
-      {/* {report === "report_identity" ? (
+      <br></br>   
+      {report === "report_identity" ? (
         <Report user={user} setUser={setUser} back={back} />
       ) : report === "antigen_test" ? (
-        <AntigenTest user={user} setUser={setUser} back={back}/>
+        <AntigenTest user={user} setUser={setUser} back={back} updateUserStatus={updateUserStatus}/>
       ) : 
         <></>
-      } */}
-      
+      }    
     </>
   );
 };

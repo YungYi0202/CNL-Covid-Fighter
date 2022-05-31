@@ -144,7 +144,7 @@ const SignUpForm = ({ onSignUpClick, setCurrent }) => {
   const [email, setEmail] = React.useState("");
 
   const handleSignUpClick = async () => {
-    if (account === "" || password === "" || username === "" || dormitory === "" || email === "" || vaccine1 === "") {
+    if (account === "" || password === "" || username === "" || dormitory === "" || room === ""|| email === "" || vaccine1 === "") {
       message.error("您有未填欄位");
       return;
     }
