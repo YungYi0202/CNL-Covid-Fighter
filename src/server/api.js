@@ -141,7 +141,7 @@ const checkConfirmerRooms = async (dormitory, userKey, date) => {
  */
 const addConfirmedRooms = async (info) => {
   if (info.dormitory === "無") return "";
-  const [confirmedRooms, found] = checkConfirmerRooms(info.dormitory, info.userKey, info.date);
+  const [confirmedRooms, found] = await checkConfirmerRooms(info.dormitory, info.userKey, info.date);
   if (found === -1) {
     const dorm = info.dormitory;
     delete info.dormitory
