@@ -39,7 +39,7 @@ const Footprint = () => {
 
   function isWithinInterval(fp) {
     let date = new Date(fp.date);  
-    return date > (today - dayInterval * 86400000);
+    return date >= (today - dayInterval * 86400000);
   }
 
   return (

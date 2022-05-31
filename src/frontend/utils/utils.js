@@ -41,7 +41,7 @@ function isDangerDateForUser(queryDate, user, incubationPeriod) {
   let confirmDate = new Date(user.confirmed_date);
   let date = new Date(queryDate);  
   let cond1 = (user.recover_date === "")? true: date < new Date(user.recover_date);
-  return cond1 && (date > (confirmDate - incubationPeriod * 86400000));
+  return cond1 && (date >= (confirmDate - incubationPeriod * 86400000));
 }
 
 export { getRandomInt, isValidHttpUrl, isEmpty, getDateFootprint, isDangerDateForUser };
