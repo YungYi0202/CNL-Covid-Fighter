@@ -36,7 +36,7 @@ const myCalendar = ({ user }) => {
   let behavior = new Array(endDay.diff(startDay, "d") + 14 + 1);
 
   testKeys.forEach((date, _) => {
-    let index = date.diff(startDay, "d");
+    let index = date.diff(startDay, "d") + 1;
     if (tests[date.format("YYYY/MM/DD")] === "positive") {
       if (behavior[index] === "居家照護" || behavior[index] === "自主健康管理")
         return;
@@ -64,7 +64,7 @@ const myCalendar = ({ user }) => {
   });
 
   statusKeys.forEach((date, _) => {
-    let index = date.diff(startDay, "d");
+    let index = date.diff(startDay, "d") + 1;
     if (statuses[date.format("YYYY/MM/DD")] === "入境者") {
       for (let i = 1; i <= 6; ++i) {
         if (!behavior.hasOwnProperty(index + i))
@@ -82,7 +82,7 @@ const myCalendar = ({ user }) => {
   });
 
   statusKeys.forEach((date, _) => {
-    let index = date.diff(startDay, "d");
+    let index = date.diff(startDay, "d") + 1;
     if (statuses[date.format("YYYY/MM/DD")] === "確診者同住親友、同寢室") {
       console.log(num_doses);
       if (num_doses !== 3) {
@@ -108,7 +108,7 @@ const myCalendar = ({ user }) => {
   });
 
   statusKeys.forEach((date, _) => {
-    let index = date.diff(startDay, "d");
+    let index = date.diff(startDay, "d") + 1;
     if (statuses[date.format("YYYY/MM/DD")] === "確診者的密切接觸者的接觸者") {
       for (let i = 1; i <= 7; ++i) {
         if (!behavior.hasOwnProperty(index + i))
