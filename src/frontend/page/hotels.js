@@ -43,14 +43,7 @@ const Hotels = () => {
   const quarantineHotelLink = "https://www.findhotel.com.tw/taipei-hotel/?fbclid=IwAR2yVeGC0fAgsfXK6ocE2PWQJ5Hn__oPodws1WTBweR_ElszW0T_ZqWRoVU";
   return (
     <>
-      <h1> 防疫旅館 </h1>
-      
       <PageWindow dangerouslySetInnerHTML={{ __html: `"<iframe src='${quarantineHotelLink}' height='1000' width='1500' />"`}} />
-      <h1> 防疫計程車電話 </h1>
-      {telephones.map((telephone) => (
-        <h2> {telephone} </h2>
-      ))}
-      <h1> TODO: map </h1>
     </>
   );
 };
