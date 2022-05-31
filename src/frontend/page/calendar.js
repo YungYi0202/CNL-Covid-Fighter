@@ -123,7 +123,8 @@ const myCalendar = ({ user }) => {
     "居家檢疫": "pink",
     "自主健康管理": "cyan",
     "居家隔離": "geekblue",
-    "居家照護": "orange"
+    "居家照護": "orange",
+    "自主防疫": "lime"
   }
 
   function getDateData(value) {
