@@ -152,6 +152,21 @@ const myCalendar = ({ user }) => {
       }
     }
 
+    if (tests.hasOwnProperty(date)) {
+      switch (tests[date]) {
+        case "positive":
+          if (statuses.hasOwnProperty(date) && statuses[date] === "快篩陽性")
+            break;
+          listData.push({ color: "red", content: "快篩陽姓" });
+          break;
+        case "negative":
+          listData.push({ color: "red", content: "快篩陰性" });
+          break;
+        default:
+          break;
+      }
+    }
+
     let index = value.diff(startDay, "d");
     if (index >= 0 && index < behavior.length) {
       if (behavior.hasOwnProperty(index)) {
