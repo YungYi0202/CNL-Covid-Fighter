@@ -4,7 +4,7 @@ import Report from "../page/report";
 import AntigenTest from "../page/antigenTest";
 import {ConfirmedInstuct, EntrantInstuct, IsContactsInstuct ,ContactOfContactsInstuct} from "./instruction"
 import { DeleteOutlined } from '@ant-design/icons';
-import { updateUser, addConfirmedRooms, removeConfirmedRooms, recoverConfirmedRooms } from "../../server/api";
+import { updateUser, addConfirmedRooms, removeConfirmedRooms, recoverConfirmedRooms, updateContactsAfterConfirmed, sendEmailToContacts } from "../../server/api";
 
 const { Step } = Steps;
 const { Title, Paragraph, Text, Link } = Typography;
@@ -102,6 +102,8 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
           confirmed_date: formatDate(latest),
           recover_date: ""
         };
+        await sendEmailToContacts(updatedUser);
+        await updateContactsAfterConfirmed(updatedUser);
         const msg = await addConfirmedRooms({"dormitory": user.dormitory, "room": user.room, "date": formatDate(latest), "userKey": user.key, "recoverNegative": false});
       }
     }
