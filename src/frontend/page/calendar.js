@@ -123,7 +123,8 @@ const myCalendar = ({ user }) => {
     "居家檢疫": "pink",
     "自主健康管理": "cyan",
     "居家隔離": "geekblue",
-    "居家照護": "orange"
+    "居家照護": "orange",
+    "自主防疫": "lime"
   }
 
   function getDateData(value) {
@@ -145,6 +146,21 @@ const myCalendar = ({ user }) => {
           break;
         case "確診者的密切接觸者的接觸者":
           listData.push({ color: "purple", content: "他人確診" });
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (tests.hasOwnProperty(date)) {
+      switch (tests[date]) {
+        case "positive":
+          if (statuses.hasOwnProperty(date) && statuses[date] === "快篩陽性")
+            break;
+          listData.push({ color: "red", content: "快篩陽姓" });
+          break;
+        case "negative":
+          listData.push({ color: "red", content: "快篩陰性" });
           break;
         default:
           break;
