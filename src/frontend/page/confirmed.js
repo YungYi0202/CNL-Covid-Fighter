@@ -24,7 +24,7 @@ const Confirmed = ({ user, setUser, back }) => {
       const [msg2] = await sendEmailToContacts(updatedUser);
       const [msg] = await updateUser(updatedUser);
       back();
-      addConfirmedRooms({"dormitory": user.dormitory, "room": user.room, "date": date, "userKey": user.key, "recoverNegative": false});
+      const [msg3] = await addConfirmedRooms({"dormitory": user.dormitory, "room": user.room, "date": date, "userKey": user.key, "recoverNegative": false});
     }
   };
 
