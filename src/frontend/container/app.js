@@ -11,6 +11,7 @@ import Stores from "../page/stores";
 import NewInfo from "../page/newInfo";
 import Hotels from "../page/hotels";
 import Setting from "../page/setting";
+import Rule from "../page/rule";
 import { isEmpty } from "../utils/utils";
 
 const items = [
@@ -36,6 +37,10 @@ const items = [
         key: "setting"
       }
     ]
+  },
+  {
+    label: "最新政策",
+    key: "rule"
   },
   {
     label: "臺大確診人數",
@@ -108,6 +113,8 @@ const App = () => {
         <Hotels />
       ) : current === "setting" ? (
         <Setting user={user} setUser={setUser} />
+      ) : current === "rule" ? (
+        <Rule />
       ) : (
         <h1> Why???? </h1>
       )}

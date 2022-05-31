@@ -1,9 +1,9 @@
 import React from "react";
-import { Menu, Button, Typography, Timeline } from "antd";
+import { Button, Typography, PageHeader, Divider } from "antd";
 import Report from "../page/report";
 import AntigenTest from "../page/antigenTest";
 import { updateUser } from "../../server/api";
-
+import {ConfirmedInstuct, EntrantInstuct, IsContactsInstuct ,ContactOfContactsInstuct} from "./instruction"
 const { Title, Paragraph, Text, Link } = Typography;
 const items = [
   {
@@ -164,86 +164,57 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
 
   return (
     <>
-      <h1> 歡迎，{user.username}！你當前的狀態為： {status} </h1>
+      <PageHeader
+        className="site-page-header"
+        ghost={true}
+        // title={<h4>歡迎，{user.username}！</h4>}
+        title={`歡迎，${user.username}！`}
+        backIcon={false}
+        extra={[
+          <Button onClick={() => setReport("report_identity")}> 我是確診 / 密切接觸者 </Button>,
+          <Button onClick={() => setReport("antigen_test")}> 我要紀錄快篩 </Button>,
+          <Button onClick={handleLogoutClick}>登出</Button>
+        ]}
+      >
+        <div style={{ display: "flex"}}>
+          <Title level={4}>
+          {
+            status === "健康"?
+            "您今日的狀態為健康"
+            :
+              `您是 ${
+              defaultInformation === "confirmed"? "確診者"
+              : defaultInformation === "entrant"? "入境者"
+              : defaultInformation === "is_contacts"? "確診者的同住親友"
+              : "確診者的密切接觸者的接觸者"
+              } ，今天是 ${status} 的日子`
+          }
+          </Title>
+        </div>
+      </PageHeader>
+      <Divider/>
+      { status === "健康"?
+        <></>:
+        <>
+        <Title level={4} style={{padding: "20px"}}>相關指示</Title>
+        {
+          defaultInformation === "confirmed"?  <ConfirmedInstuct />
+          : defaultInformation === "entrant"? <EntrantInstuct />
+          : defaultInformation === "is_contacts"? <IsContactsInstuct mode={user.vaccine.num_doses}/>
+          : <ContactOfContactsInstuct />
+        } 
+        </>
+      }
+      <br></br>
+      <br></br>
       {report === "report_identity" ? (
         <Report user={user} setUser={setUser} back={back} />
       ) : report === "antigen_test" ? (
         <AntigenTest user={user} setUser={setUser} back={back}/>
-      ) : (
-        <>
-          <Button onClick={handleReportClick}> 我是確診 / 密切接觸者 </Button>
-          <br />
-          <br />
-          <Button onClick={() => setReport("antigen_test")}> 我要紀錄快篩 </Button>
-          <br />
-          <br />
-          <div style={{ display: "flex", height: "350px" }}>
-            <Menu
-              onClick={onClick}
-              style={{ width: 256 }}
-              defaultSelectedKeys={[information]}
-              mode="inline"
-              items={items}
-            />
-            {information === "confirmed" ? (
-              <Timeline style={{ paddingLeft: "20px" }}>
-                <Timeline.Item>步驟一：透過遠距或視訊方式由醫師確認快篩結果。</Timeline.Item>
-                <Timeline.Item>步驟二：至<Link href="https://www.cdc.gov.tw/Category/MPage/9wonLmQrvAdSAx55Ec7aWw">衛福部確診個案自主回報疫調系統</Link>回報。</Timeline.Item>
-                <Timeline.Item>步驟三：至<Link href="https://my.ntu.edu.tw/ntuwdc/ConfirmedReport.aspx">臺大確診者通報系統</Link>通報。</Timeline.Item>
-                <Timeline.Item>步驟四：居家照護七天。</Timeline.Item>
-                <Timeline.Item>步驟五：無需採檢即可解除居家照護。</Timeline.Item>
-                <Timeline.Item>步驟六：自主健康管理七天。</Timeline.Item>
-              </Timeline>
-            ) : information === "entrant" ? (
-              <Timeline style={{ paddingLeft: "20px" }}>
-                <Timeline.Item>步驟一：至<Link href="https://my.ntu.edu.tw/ntuwdc/reporting.aspx">臺大居家檢疫通報系統</Link>通報。</Timeline.Item>
-                <Timeline.Item>步驟二：居家檢疫七天。</Timeline.Item>
-                <Timeline.Item>步驟三：居家檢疫第七天或出現症狀時快篩。</Timeline.Item>
-                <Timeline.Item>步驟四：自主健康管理七天。</Timeline.Item>
-              </Timeline>
-            ) : information === "is_contacts" ? (
-              <div>
-                <Button onClick={handleThreeDoses} style={{ marginLeft: "20px" }}> 如果打滿三劑： </Button>
-                <br />
-                <br />
-                {
-                  threeDoses ? (
-                    <Timeline style={{ paddingLeft: "20px" }}>
-                      <Timeline.Item>步驟一：至<Link href="https://hackmd.io/https://my.ntu.edu.tw/ntuwdc/internalReport1.aspx">臺大密切接觸者通報</Link>通報。</Timeline.Item>
-                      <Timeline.Item>步驟二：居家隔離三天，並且在此期間進行一次快篩。</Timeline.Item>
-                      <Timeline.Item>步驟三：四天自主防疫。</Timeline.Item>
-                    </Timeline>
-                  ) : (
-                    <></>
-                  )
-                }
-                <Button onClick={handleLessThanThreeDoses} style={{ marginLeft: "20px" }}> 如果未打滿三劑： </Button>
-                <br />
-                <br />
-                {
-                  lessThanThreeDoses ? (
-                    <Timeline style={{ paddingLeft: "20px" }}>
-                      <Timeline.Item>步驟一：至<Link href="https://hackmd.io/https://my.ntu.edu.tw/ntuwdc/internalReport1.aspx">臺大密切接觸者通報</Link>通報。</Timeline.Item>
-                      <Timeline.Item>步驟二：七天的自主防疫。</Timeline.Item>
-                    </Timeline>
-                  ) : (
-                    <></>
-                  )
-                }
-              </div>
-            ) : information === "contact_of_contacts" ? (
-              <Timeline style={{ paddingLeft: "20px" }}>
-                <Timeline.Item>步驟一：自我健康監測七天。</Timeline.Item>
-              </Timeline>
-            ) : (
-              <></>
-            )}
-          </div>
-        </>
-      )}
-      <br />
-      <br />
-      <Button onClick={handleLogoutClick}> Logout </Button>
+      ) : 
+        <></>
+      }
+      
     </>
   );
 };
