@@ -143,6 +143,7 @@ const addConfirmedRooms = async (info) => {
   if (info.dormitory === "無") return "";
   const [confirmedRooms, found] = checkConfirmerRooms(info.dormitory, info.userKey, info.date);
   if (found === -1) {
+    const dorm = info.dormitory;
     delete info.dormitory
     confirmedRooms[dorm].push(info);
     const {
@@ -182,7 +183,7 @@ const recoverConfirmedRooms = async (info) => {
   if (found === -1) {
     return "欲設定康復的該筆確診住宿資料不存在";
   } else {
-    confirmedRooms[info.dormitory][i].recoverNegative = true;
+    confirmedRooms[info.dormitory][found].recoverNegative = true;
     const {
       data: { message }
     } = await instance.post('/updateConfirmedRooms', { confirmedRooms });
