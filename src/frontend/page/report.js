@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Card, Select } from "antd";
+import { Button, Card, Select, Modal } from "antd";
 import Confirmed from "../page/confirmed";
 import Contact from "../page/contact";
 import Entrant from "../page/entrant";
@@ -35,6 +35,7 @@ const Report = ({ user, setUser, back }) => {
 
   return (
     <>
+      <Modal title="登記快篩資訊" visible={true} onCancel={back} okButtonProps={{style:{ display:'none' }} } cancelText="取消">
       <Card>
         <Select
           onChange={(value) => setCurrentSituation(value)}
@@ -60,7 +61,7 @@ const Report = ({ user, setUser, back }) => {
       </Card>
       <br />
       <br />
-      <Button onClick={back}> Back </Button>
+      </Modal>
     </>
   );
 };

@@ -33,7 +33,7 @@ const items = [
         key: "footprintInform"
       },
       {
-        label: "設定",
+        label: "我的資料設定",
         key: "setting"
       }
     ]

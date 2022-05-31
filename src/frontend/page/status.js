@@ -1,10 +1,14 @@
 import React from "react";
-import { Button, Typography, PageHeader, Divider } from "antd";
+import { Button, Typography, PageHeader, Divider, Steps, Popover } from "antd";
 import Report from "../page/report";
 import AntigenTest from "../page/antigenTest";
 import { updateUser } from "../../server/api";
 import {ConfirmedInstuct, EntrantInstuct, IsContactsInstuct ,ContactOfContactsInstuct} from "./instruction"
+import { DeleteOutlined } from '@ant-design/icons';
+
+const { Step } = Steps;
 const { Title, Paragraph, Text, Link } = Typography;
+
 const items = [
   {
     label: "PCR/快篩陽性",
@@ -23,6 +27,12 @@ const items = [
     key: "contact_of_contacts"
   }
 ];
+
+const customDot = (dot, { status, index }) => (
+  <Popover>
+    {dot}
+  </Popover>
+);
 
 function formatDate(date) {
   var d = new Date(date),
@@ -48,9 +58,34 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
   );
   const [report, setReport] = React.useState("default");
   const [status, setStatus] = React.useState("健康");
-  const [information, setInformation] = React.useState(defaultInformation);
-  const [threeDoses, setThreeDoses] = React.useState(false);
-  const [lessThanThreeDoses, setLessThanThreeDoses] = React.useState(false);
+
+  const [stepsNode, setStepsNode] = React.useState([]);
+
+  React.useEffect(() => {
+    const orderedDate = Object.keys(user.antigen_test).sort(function (a, b) {
+      a = a.split('/').join('');
+      b = b.split('/').join('');
+      return a > b ? 1 : a < b ? -1 : 0;
+    });
+    const tmp = [];
+    const today = new Date();
+    orderedDate.forEach((e) => {
+      const diffDays = Math.ceil((today - new Date(e)) / (1000 * 60 * 60 * 24));
+      if (diffDays <= 31) {
+        tmp.push(<Step
+          title={user.antigen_test[e]}
+          description={(
+            <>
+              <label>{e}</label>
+              <br />
+              <Button shape="circle" icon={<DeleteOutlined />} onClick={() => onDeleteClick(e)} />
+            </>
+          )}
+        />);
+      }
+    });
+    setStepsNode(tmp);
+  }, [user]);
 
   React.useEffect(() => {
     async function renderStatus() {
@@ -130,36 +165,8 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
     renderStatus();
   }, [user]);
 
-  React.useEffect(() => {
-    setInformation(
-      user.confirmed ? "confirmed" : (
-        user.entrant ? "entrant" : (
-          user.is_contacts ? "is_contacts" : (
-            user.contact_of_contacts ? "contact_of_contacts" : "confirmed"
-          )
-        )
-      )
-    );
-  }, [user]);
-
-  const handleReportClick = () => {
-    setReport("report_identity");
-  };
-
   const back = () => {
     setReport("default");
-  };
-
-  const onClick = e => {
-    setInformation(e.key);
-  };
-
-  const handleThreeDoses = () => {
-    setThreeDoses(!threeDoses);
-  };
-
-  const handleLessThanThreeDoses = () => {
-    setLessThanThreeDoses(!lessThanThreeDoses);
   };
 
   return (
@@ -193,6 +200,11 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
         </div>
       </PageHeader>
       <Divider/>
+      <Title level={4} style={{padding: "20px"}}>快篩紀錄</Title>
+      <Steps current={40} progressDot={customDot}>
+        {stepsNode}
+      </Steps>
+      <Divider/>
       { status === "健康"?
         <></>:
         <>
@@ -205,15 +217,26 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
         } 
         </>
       }
+
       <br></br>
       <br></br>
-      {report === "report_identity" ? (
+      {/* <Modal title="Basic Modal" visible={report!=="default"} onCancel={back}> */}
+        {report === "report_identity" ? (
+          <Report user={user} setUser={setUser} back={back} />
+        ) : report === "antigen_test" ? (
+          <AntigenTest user={user} setUser={setUser} back={back}/>
+        ) : 
+          <></>
+        }
+      {/* </Modal> */}
+      
+      {/* {report === "report_identity" ? (
         <Report user={user} setUser={setUser} back={back} />
       ) : report === "antigen_test" ? (
         <AntigenTest user={user} setUser={setUser} back={back}/>
       ) : 
         <></>
-      }
+      } */}
       
     </>
   );
