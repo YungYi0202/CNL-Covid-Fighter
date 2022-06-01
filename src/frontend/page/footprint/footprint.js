@@ -1,5 +1,5 @@
 import React from "react";
-import { InputNumber, Card , Divider} from 'antd';
+import { InputNumber, Card, Divider } from 'antd';
 import { getFootprint, getEverConfirmedUsers } from "../../../server/api";
 import FootprintTable from "./table";
 import { getDateFootprint, isDangerDateForUser } from "../../utils/utils";
@@ -26,7 +26,7 @@ const Footprint = () => {
       let fps = await getFootprint();
       const users = await getEverConfirmedUsers();
       const userKeys = users.map(user => user.key);
-      fps = fps.filter(fp => userKeys.includes(fp.userKey) && isDangerDateForUser(fp.date, users[fp.userKey], incubationPeriod) );
+      fps = fps.filter(fp => userKeys.includes(fp.userKey) && isDangerDateForUser(fp.date, users[fp.userKey - 1], incubationPeriod));
       setRawData(fps);
     }
     awaitFootprint();
@@ -38,7 +38,7 @@ const Footprint = () => {
   }, [rawData, dayInterval]);
 
   function isWithinInterval(fp) {
-    let date = new Date(fp.date);  
+    let date = new Date(fp.date);
     return date >= (today - dayInterval * 86400000);
   }
 
@@ -51,30 +51,30 @@ const Footprint = () => {
       }}
       >
         <Middle>
-          <InputNumber 
+          <InputNumber
             size="large"
-            min={1} max={31} 
+            min={1} max={31}
             addonBefore={"顯示"}
             addonAfter={"天內資料"}
-            defaultValue={dayInterval} 
-            onChange={(val) => {setDayInterval(val);}} 
+            defaultValue={dayInterval}
+            onChange={(val) => { setDayInterval(val); }}
           />
         </Middle>
         <Middle>
-          <InputNumber 
+          <InputNumber
             size="large"
-            min={0} max={dayInterval} 
+            min={0} max={dayInterval}
             addonBefore={"假定淺伏期為"}
             addonAfter={"天"}
-            defaultValue={incubationPeriod} 
-            onChange={(val) => {setIncubationPeriod(val);}} 
+            defaultValue={incubationPeriod}
+            onChange={(val) => { setIncubationPeriod(val); }}
           />
-          <span style={{color: "#7e7e7e"}}>顯示確診者 確診前淺伏期 至 康復陰性日 的足跡</span>
+          <span style={{ color: "#7e7e7e" }}>顯示確診者 確診前淺伏期 至 康復陰性日 的足跡</span>
         </Middle>
       </Card>
       <Divider></Divider>
       <Card>
-      <FootprintTable dateFootprints={dateFootprints} />
+        <FootprintTable dateFootprints={dateFootprints} />
       </Card>
     </>
   );
