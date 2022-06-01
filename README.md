@@ -1,4 +1,3 @@
-
 # Get Started
 
 ## To install the needed packages
