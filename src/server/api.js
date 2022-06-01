@@ -124,7 +124,7 @@ const updateUser = async (user) => {
   return [message];
 };
 
-const checkConfirmerRooms = async (dormitory, userKey, date) => {
+const checkConfirmedRooms = async (dormitory, userKey, date) => {
   const confirmedRooms = await getConfirmedRooms();
   for (let i = 0; i < confirmedRooms[dormitory]; i++) {
     const roomData = confirmedRooms[dormitory][i];
@@ -137,11 +137,11 @@ const checkConfirmerRooms = async (dormitory, userKey, date) => {
 
 /**
  * 
- * @param {Object} info {"dormitory": ..., "room": ..., "date": ..., "userKey": ... , "recover": ...} 
+ * @param {Object} info {"dormitory": ..., "room": ..., "date": ..., "userKey": ... , "recoverNegative": ...} 
  */
 const addConfirmedRooms = async (info) => {
   if (info.dormitory === "無") return "";
-  const [confirmedRooms, found] = checkConfirmerRooms(info.dormitory, info.userKey, info.date);
+  const [confirmedRooms, found] = await checkConfirmedRooms(info.dormitory, info.userKey, info.date);
   if (found === -1) {
     const dorm = info.dormitory;
     delete info.dormitory
@@ -161,7 +161,7 @@ const addConfirmedRooms = async (info) => {
  */
 const removeConfirmedRooms = async (info) => {
   if (info.dormitory === "無") return "";
-  const [confirmedRooms, found] = checkConfirmerRooms(info.dormitory, info.userKey, info.date);
+  const [confirmedRooms, found] = await checkConfirmedRooms(info.dormitory, info.userKey, info.date);
   if (found === -1) {
     return "欲移除的該筆確診住宿資料不存在";
   } else {
@@ -179,7 +179,7 @@ const removeConfirmedRooms = async (info) => {
  */
 const recoverConfirmedRooms = async (info) => {
   if (info.dormitory === "無") return "";
-  const [confirmedRooms, found] = checkConfirmerRooms(info.dormitory, info.userKey, info.date);
+  const [confirmedRooms, found] = await checkConfirmedRooms(info.dormitory, info.userKey, info.date);
   if (found === -1) {
     return "欲設定康復的該筆確診住宿資料不存在";
   } else {
