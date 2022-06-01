@@ -7,7 +7,7 @@ import Entrant from "../page/entrant";
 const { Option } = Select;
 const situations = [
   {
-    label: "PCR/快篩陽性",
+    label: "確診者",
     key: "confirmed"
   },
   {
@@ -15,7 +15,7 @@ const situations = [
     key: "entrant"
   },
   {
-    label: "確診者同住親友",
+    label: "密切接觸者",
     key: "is_contacts"
   },
   {
