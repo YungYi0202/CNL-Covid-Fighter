@@ -44,6 +44,9 @@ const Hotels = () => {
   return (
     <>
       <PageWindow dangerouslySetInnerHTML={{ __html: `"<iframe src='${quarantineHotelLink}' height='1000' width='1500' />"`}} />
+      <h2 >
+        如有防疫計程車需求請致電1922或台北市衛生局防疫專線 02-2375-3782
+      </h2>
     </>
   );
 };
