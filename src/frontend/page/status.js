@@ -234,7 +234,7 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
         title={`歡迎，${user.username}！`}
         backIcon={false}
         extra={[
-          <Button onClick={() => setReport("report_identity")}> 我是確診 / 密切接觸者 </Button>,
+          <Button onClick={() => setReport("report_identity")}> 我是確診者 / 入境者 / 接觸者 </Button>,
           <Button onClick={() => setReport("antigen_test")}> 我要紀錄快篩 </Button>,
           <Button onClick={handleLogoutClick} type="primary">登出</Button>
         ]}
@@ -248,7 +248,7 @@ const Status = ({ user, setUser, handleLogoutClick }) => {
               `您是 ${
               defaultInformation === "confirmed"? "確診者"
               : defaultInformation === "entrant"? "入境者"
-              : defaultInformation === "is_contacts"? "確診者的同住親友"
+              : defaultInformation === "is_contacts"? "密切接觸者"
               : "確診者的密切接觸者的接觸者"
               } ，今天是 ${status} 的日子`
           }
