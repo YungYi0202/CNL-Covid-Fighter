@@ -161,7 +161,7 @@ const addConfirmedRooms = async (info) => {
  */
 const removeConfirmedRooms = async (info) => {
   if (info.dormitory === "無") return "";
-  const [confirmedRooms, found] = checkConfirmerRooms(info.dormitory, info.userKey, info.date);
+  const [confirmedRooms, found] = await checkConfirmerRooms(info.dormitory, info.userKey, info.date);
   if (found === -1) {
     return "欲移除的該筆確診住宿資料不存在";
   } else {
@@ -179,7 +179,7 @@ const removeConfirmedRooms = async (info) => {
  */
 const recoverConfirmedRooms = async (info) => {
   if (info.dormitory === "無") return "";
-  const [confirmedRooms, found] = checkConfirmerRooms(info.dormitory, info.userKey, info.date);
+  const [confirmedRooms, found] = await checkConfirmerRooms(info.dormitory, info.userKey, info.date);
   if (found === -1) {
     return "欲設定康復的該筆確診住宿資料不存在";
   } else {
