@@ -1,8 +1,7 @@
 import { Button } from "antd";
 import React from "react";
 import styled from "styled-components";
-// import { isValidHttpUrl } from "../utils/utils";
-// import { getStores } from "../../backend/data";
+
 
 const PageWindow = styled.div`
   width: 100%;
@@ -14,7 +13,6 @@ const PageWindow = styled.div`
 
 const Stores = () => {
   const link = "https://yasco.com.tw/tw/covid19sefttest.asp";
-  // setTimeout(() => window.open(link), 5000);
 
   return (
 

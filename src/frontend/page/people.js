@@ -1,5 +1,4 @@
 import React from "react";
-import { getPeople } from "../../server/api";
 import styled from "styled-components";
 
 
@@ -12,15 +11,6 @@ const PageWindow = styled.div`
 `;
 
 const People = () => {
-  const [people, setPeople] = React.useState({ today: 0, accumulative: 0 });
-
-  React.useEffect(() => {
-    async function awaitPeople() {
-      const tmp = await getPeople();
-      setPeople(tmp);
-    }
-    awaitPeople();
-  }, []);
 
   return (
     <>
