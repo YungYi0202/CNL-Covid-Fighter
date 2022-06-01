@@ -80,12 +80,8 @@ const addInElement = async (filename, addData, propName) => {
 };
 
 const getUsers = async () => await readData("users.json");
-const getStores = async () => await readData("stores.json");
-const getPeople = async () => await readData("people.json");
 const getConfirmedRooms = async () => await readData("confirmedRooms.json");
-const getHotels = async () => await readData("hotels.json");
 const getFootprint = async () => await readData("footprint.json");
-const getTelephones = async () => await readData("telephones.json");
 const getLocationOptions = async () => await readData("locationOptions.json");
 
 const addUser = async (newUser) => {
@@ -238,12 +234,8 @@ const sendEmailToContacts = async (confirmedUser) => {
 
 export {
   getUsers,
-  getStores,
-  getPeople,
   getConfirmedRooms,
-  getHotels,
   getFootprint,
-  getTelephones,
   updateUser,
   addConfirmedRooms,
   removeConfirmedRooms,
